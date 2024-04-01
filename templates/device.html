@@ -43,6 +43,7 @@
             <div class="col mb-3">
                 <label for="os" class="form-label">Operating System</label>
                 <input type="text" class="form-control" id="os" name="os" value="{{ device.operating_system }}" required>
+            </div>
         </div>
         <hr>
         <h3>Hardware Information</h3>
@@ -105,6 +106,7 @@
                 <label for="is_touchscreen" class="form-label">Touchscreen?</label>
                 <input type="text" class="form-control" id="is_touchscreen" name="is_touchscreen" value="{{ 'Yes' if device.is_touchscreen else 'No' }}">
             </div>
+        </div>
         <hr>
         <h3>Network Information</h3>
         <div class="row">
