@@ -1,4 +1,3 @@
-import os
 import json
 
 from flask import Flask, render_template, request, url_for, redirect
@@ -60,9 +59,9 @@ def page_device_redirect():
 def page_device_add():
     if request.args.get('status_code'):
         status = get_status(request.args.get('status_code'))
-        return render_template('add_device.html', status = status['status'], message = status['message'])
+        return render_template('add_device.html', title = 'Add Device', status = status['status'], message = status['message'])
     
-    return render_template('add_device.html')
+    return render_template('add_device.html', title = 'Add Device')
 
 @app.route('/device/<serial_number>')
 def page_device(serial_number):
