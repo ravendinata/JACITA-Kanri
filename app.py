@@ -1,12 +1,13 @@
 import os
+import json
 
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
-# Read username and password from config.json
-import json
+from helpers.status import get_status
 
+# Read username and password from config.json
 with open('config.json', 'r') as f:
     config = json.load(f)
 
@@ -55,17 +56,35 @@ def page_home():
 def page_device_redirect():
     return redirect(url_for('page_devices'))
 
-@app.route('/device/<serial_number>', methods = ['GET'])
+@app.route('/device/<serial_number>', methods = ['GET', 'POST'])
 def page_device(serial_number):
     device = Devices.query.filter_by(serial_number = serial_number).first()
+
+    if request.args.get('status_code'):
+        status = get_status(request.args.get('status_code'))
+        return render_template('device.html', title = 'Device', device = device.to_dict(), status = status['status'], message = status['message'])
 
     if device is None:
         return render_template('device.html', title = 'Device', device = None, error = "No device found with the specified serial number.")
     
     return render_template('device.html', title = 'Device', device = device.to_dict())
+
+@app.route('/device/<serial_number>/edit')
+def page_device_edit(serial_number):
+    device = Devices.query.filter_by(serial_number = serial_number).first()
+
+    if device is None:
+        return render_template('device.html', title = 'Edit Device', device = None, error = "No device found with the specified serial number.")
+    
+    return render_template('device.html', title = 'Edit Device', device = device.to_dict(), edit = True)
     
 @app.route('/devices')
 def page_devices():
+
+    if request.args.get('status_code'):
+        status = get_status(request.args.get('status_code'))
+        return render_template('devices.html', title = 'Devices', status = status['status'], message = status['message'])
+    
     return render_template('devices.html', title = 'Devices')
 
 @app.route('/about')
@@ -86,6 +105,57 @@ def search_devices():
         return { 'data': None }
 
     return { 'data': device.to_dict() }
+
+@app.route('/api/device/edit', methods = ['POST'])
+def edit_device():
+    print(request.form)
+    print(f"Edit device: {request.form['serial_number_original']}")
+    serial_number = request.form['serial_number_original']
+    device = Devices.query.filter_by(serial_number = serial_number).first()
+
+    if device is None:
+        return redirect(url_for('page_device', serial_number = serial_number))
+    
+    device.serial_number = request.form['serial_number']
+    device.brand = request.form['brand']
+    device.model = request.form['model']
+    device.type = request.form['type']
+    device.purchase_date = request.form['purchase_date']
+    device.operating_system = request.form['operating_system']
+    device.cpu = request.form['cpu']
+    device.gpu = request.form['gpu']
+    device.physical_mem_type = request.form['physical_mem_type']
+    device.physical_mem_size_gb = request.form['physical_mem_size_gb']
+    device.physical_mem_slots = request.form['physical_mem_slots']
+    device.physical_mem_slots_used = request.form['physical_mem_slots_used']
+    device.storage_type = request.form['storage_type']
+    device.storage_size_gb = request.form['storage_size_gb']
+    device.internal_display_type = request.form['internal_display_type']
+    device.internal_display_size_inch = request.form['internal_display_size_inch']
+    device.internal_display_resolution = request.form['internal_display_resolution']
+    device.is_touchscreen = 1 if request.form['is_touchscreen'] == 'true' else 0
+    device.wireless_mac = request.form['wireless_mac']
+    device.ethernet_mac = request.form['ethernet_mac']
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        return redirect(url_for('page_device', serial_number = serial_number, status_code = "338501"))
+
+    return redirect(url_for('page_device', serial_number = request.form['serial_number'], status_code = "338201"))
+
+@app.route('/api/device/delete', methods = ['POST'])
+def delete_device():
+    serial_number = request.form['serial_number_original']
+    device = Devices.query.filter_by(serial_number = serial_number).first()
+
+    if device is None:
+        return redirect(url_for('page_device', serial_number = serial_number))
+    
+    db.session.delete(device)
+    db.session.commit()
+
+    return redirect(url_for('page_devices', status_code = "338202"))
 
 @app.route('/api/devices')
 def get_devices():
