@@ -7,11 +7,15 @@
 </div>
 {% endif %}
 <div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
-    <div class="row">
-        <h1>Add New Device</h1>
-    </div>
+    <h2>
+        Add New Device
+        <a href="/devices" class="btn btn-secondary float-end">Back to Devices</a>
+    </h2>
     <hr>
     <form id="deviceForm" method="POST">
+        <div class="row">
+            <h1>Device Information</h1>
+        </div>
         <div class="row">
             <div class="col mb-3">
                 <label for="serial_number" class="form-label">Serial Number</label>

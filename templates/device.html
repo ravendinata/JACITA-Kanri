@@ -24,18 +24,13 @@
 </div>
 {% endif %}
 <div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <h1>Device Information</h1>
-        </div>
-        <div class="col-md-6 mb-3">
-            {% if edit %}
-            <button type="button" class="btn btn-primary float-end me-2" onclick="window.location.href = `/device/{{ device.serial_number }}`">Disable Edit Mode</button>
-            {% else %}
-            <button type="button" class="btn btn-outline-primary float-end" onclick="window.location.href = `/device/{{ device.serial_number }}/edit`">Enable Edit Mode</button>
-            {% endif %}
-        </div>
-    </div>
+    <h2>Device Information</h2>
+    {% if edit %}
+    <button type="button" class="btn btn-primary float-end me-2" onclick="window.location.href = `/device/{{ device.serial_number }}`">Disable Edit Mode</button>
+    {% else %}
+    <button type="button" class="btn btn-outline-primary float-end" onclick="window.location.href = `/device/{{ device.serial_number }}/edit`">Enable Edit Mode</button>
+    {% endif %}
+    <hr>
     <form id="deviceForm" method="POST">
         <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
         <div class="row">
