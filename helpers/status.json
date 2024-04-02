@@ -1,0 +1,18 @@
+{
+    "338200": {
+        "status": "success",
+        "message": "Device successfully added."
+    },
+    "338201": {
+        "status": "success",
+        "message": "Device successfully updated."
+    },
+    "338202": {
+        "status": "success",
+        "message": "Device successfully deleted."
+    },
+    "338501": {
+        "status": "exception",
+        "message": "Error occurred while modifying database."
+    }
+}
