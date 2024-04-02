@@ -56,7 +56,15 @@ def page_home():
 def page_device_redirect():
     return redirect(url_for('page_devices'))
 
-@app.route('/device/<serial_number>', methods = ['GET', 'POST'])
+@app.route('/add_device')
+def page_device_add():
+    if request.args.get('status_code'):
+        status = get_status(request.args.get('status_code'))
+        return render_template('add_device.html', status = status['status'], message = status['message'])
+    
+    return render_template('add_device.html')
+
+@app.route('/device/<serial_number>')
 def page_device(serial_number):
     device = Devices.query.filter_by(serial_number = serial_number).first()
 
@@ -126,10 +134,13 @@ def add_device():
     storage_size_gb = request.form['storage_size_gb']
     internal_display_type = request.form['internal_display_type']
     internal_display_size_inch = request.form['internal_display_size_inch']
-    internal_display_resolution = request.form['internal_display_resolution']
+    internal_display_resolution_w = request.form['internal_display_resolution_w']
+    internal_display_resolution_h = request.form['internal_display_resolution_h']
     is_touchscreen = 1 if request.form['is_touchscreen'] == 'true' else 0
     wireless_mac = request.form['wireless_mac']
     ethernet_mac = request.form['ethernet_mac']
+
+    internal_display_resolution = f"{internal_display_resolution_w}x{internal_display_resolution_h}"
 
     device = Devices(serial_number = serial_number, 
                      brand = brand, model = model, type = type, 

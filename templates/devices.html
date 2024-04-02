@@ -10,7 +10,13 @@
     <i class="fa-solid fa-triangle-exclamation"></i> An error occurred while saving changes. Exception: {{ message|default('-') }}
 </div>
 {% endif %}
-<h2>{{ title }}</h2>
+<h2>
+    {{ title }}
+    <span class="float-end">
+        <a class="btn btn-primary" href="/add_device">Add New Device</a>
+    </span>
+</h2>
+<hr>
 <table id="data" class="table table-striped" style="width: 100%;">
     <thead>
         <tr>
