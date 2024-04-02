@@ -16,11 +16,11 @@
 {% else %}
 {% if status == 'success' %}
 <div class="alert alert-success" role="alert" id="alert">
-    <i class="fa-solid fa-check"></i> Changes saved successfully.
+    <i class="fa-solid fa-check"></i> {{ message|default('Changes saved successfully.') }}
 </div>
 {% elif status == 'exception' %}
 <div class="alert alert-danger" role="alert" id="alert">
-    <i class="fa-solid fa-triangle-exclamation"></i> An error occurred while saving changes. Exception: {{ exception|default('-') }}
+    <i class="fa-solid fa-triangle-exclamation"></i> An error occurred while saving changes. Exception: {{ message|default('-') }}
 </div>
 {% endif %}
 <div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
