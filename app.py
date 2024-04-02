@@ -106,6 +106,52 @@ def search_devices():
 
     return { 'data': device.to_dict() }
 
+@app.route('/api/device/add', methods = ['POST'])
+def add_device():
+    print(request.form)
+    
+    serial_number = request.form['serial_number']
+    brand = request.form['brand']
+    model = request.form['model']
+    type = request.form['type']
+    purchase_date = request.form['purchase_date']
+    operating_system = request.form['operating_system']
+    cpu = request.form['cpu']
+    gpu = request.form['gpu']
+    physical_mem_type = request.form['physical_mem_type']
+    physical_mem_size_gb = request.form['physical_mem_size_gb']
+    physical_mem_slots = request.form['physical_mem_slots']
+    physical_mem_slots_used = request.form['physical_mem_slots_used']
+    storage_type = request.form['storage_type']
+    storage_size_gb = request.form['storage_size_gb']
+    internal_display_type = request.form['internal_display_type']
+    internal_display_size_inch = request.form['internal_display_size_inch']
+    internal_display_resolution = request.form['internal_display_resolution']
+    is_touchscreen = 1 if request.form['is_touchscreen'] == 'true' else 0
+    wireless_mac = request.form['wireless_mac']
+    ethernet_mac = request.form['ethernet_mac']
+
+    device = Devices(serial_number = serial_number, 
+                     brand = brand, model = model, type = type, 
+                     purchase_date = purchase_date, 
+                     operating_system = operating_system, 
+                     cpu = cpu, gpu = gpu, 
+                     physical_mem_type = physical_mem_type, physical_mem_size_gb = physical_mem_size_gb, 
+                     physical_mem_slots = physical_mem_slots, physical_mem_slots_used = physical_mem_slots_used, 
+                     storage_type = storage_type, storage_size_gb = storage_size_gb, 
+                     internal_display_type = internal_display_type, internal_display_size_inch = internal_display_size_inch, 
+                     internal_display_resolution = internal_display_resolution, is_touchscreen = is_touchscreen, 
+                     wireless_mac = wireless_mac, ethernet_mac = ethernet_mac)
+
+    try:
+        db.session.add(device)
+        db.session.commit()
+    except Exception as e:
+        print(f"ERROR/EX: {e}")
+        return redirect(url_for('page_device_add', status_code = "338500"))
+
+    return redirect(url_for('page_device', serial_number = serial_number, status_code = "338200"))
+
 @app.route('/api/device/edit', methods = ['POST'])
 def edit_device():
     print(request.form)
