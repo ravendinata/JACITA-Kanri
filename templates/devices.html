@@ -10,7 +10,7 @@
     <i class="fa-solid fa-triangle-exclamation"></i> An error occurred while saving changes. Exception: {{ message|default('-') }}
 </div>
 {% endif %}
-<span class="float-end"><a class="btn btn-primary" href="/add_device">Add New Device</a></span>
+<span class="float-end"><a class="btn btn-primary" href="/add_device"><i class="fa-solid fa-plus"></i> Add New Device</a></span>
 <h2>Device Inventory</h2>
 <hr>
 <table id="data" class="table table-striped" style="width: 100%;">
@@ -49,7 +49,7 @@ $(document).ready(function ()
                 name: 'actions', 
                 searchable: false,
                 ordertable: false,
-                defaultContent: '<a href="/device" class="btn btn-primary btn-sm">View Details</a>',
+                defaultContent: '<a href="/device" class="btn btn-primary btn-sm"><i class="fa-regular fa-eye"></i> View Details</a>',
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) 
                 {
                     $(cell).find('a').attr('href', `/device/${rowData.serial_number}`);
