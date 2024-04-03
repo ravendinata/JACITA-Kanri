@@ -26,6 +26,8 @@ markupsafe==2.1.5
     # via
     #   jinja2
     #   werkzeug
+pymysql==1.1.0
+    # via -r requirements.in
 sqlalchemy==2.0.29
     # via
     #   -r requirements.in
