@@ -59,9 +59,9 @@ def page_device_redirect():
 def page_device_add():
     if request.args.get('status_code'):
         status = get_status(request.args.get('status_code'))
-        return render_template('add_device.html', title = 'Add Device', status = status['status'], message = status['message'])
+        return render_template('edit_device.html', title = 'Add New Device', status = status['status'], message = status['message'])
     
-    return render_template('add_device.html', title = 'Add Device')
+    return render_template('edit_device.html', title = 'Add New Device')
 
 @app.route('/device/<serial_number>')
 def page_device(serial_number):
@@ -83,7 +83,7 @@ def page_device_edit(serial_number):
     if device is None:
         return render_template('device.html', title = 'Edit Device', device = None, error = "No device found with the specified serial number.")
     
-    return render_template('device.html', title = 'Edit Device', device = device.to_dict(), edit = True)
+    return render_template('edit_device.html', title = 'Edit Device', device = device.to_dict(), edit = True)
     
 @app.route('/devices')
 def page_devices():
@@ -135,7 +135,7 @@ def add_device():
     internal_display_size_inch = request.form['internal_display_size_inch']
     internal_display_resolution_w = request.form['internal_display_resolution_w']
     internal_display_resolution_h = request.form['internal_display_resolution_h']
-    is_touchscreen = 1 if request.form['is_touchscreen'] == 'true' else 0
+    is_touchscreen = bool(request.form['is_touchscreen'])
     wireless_mac = request.form['wireless_mac']
     ethernet_mac = request.form['ethernet_mac']
 
@@ -188,8 +188,10 @@ def edit_device():
     device.storage_size_gb = request.form['storage_size_gb']
     device.internal_display_type = request.form['internal_display_type']
     device.internal_display_size_inch = request.form['internal_display_size_inch']
-    device.internal_display_resolution = request.form['internal_display_resolution']
-    device.is_touchscreen = 1 if request.form['is_touchscreen'] == 'true' else 0
+    internal_display_resolution_w = request.form['internal_display_resolution_w']
+    internal_display_resolution_h = request.form['internal_display_resolution_h']
+    device.internal_display_resolution = f"{internal_display_resolution_w}x{internal_display_resolution_h}"
+    device.is_touchscreen = bool(request.form['is_touchscreen'])
     device.wireless_mac = request.form['wireless_mac']
     device.ethernet_mac = request.form['ethernet_mac']
 

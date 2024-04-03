@@ -7,19 +7,24 @@
 </div>
 {% endif %}
 <div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
-    <span><a href="/devices" class="btn btn-secondary float-end">Back to Devices</a></span>
-    <h2>
-        Add New Device
-    </h2>
+    {% if edit %}
+    <span><a href="/device/{{ device.serial_number }}" class="btn btn-secondary float-end"><i class="fa-solid fa-caret-left"></i> Back to device detail page</a></span>
+    {% else %}
+    <span><a href="/devices" class="btn btn-secondary float-end"><i class="fa-solid fa-caret-left"></i> Back to Devices</a></span>
+    {% endif %}
+    <h2>{{ title }}</h2>
     <hr>
     <form class="needs-validation" id="deviceForm" method="POST" novalidate>
         <div class="row">
             <h1>Device Information</h1>
         </div>
+        {% if edit %}
+        <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
+        {% endif %}
         <div class="row">
             <div class="col mb-3">
                 <label for="serial_number" class="form-label">Serial Number</label>
-                <input type="text" class="form-control" id="serial_number" name="serial_number" required>
+                <input type="text" class="form-control" id="serial_number" name="serial_number" {% if edit %} value="{{ device.serial_number }}" {% endif %} required>
                 <div class="form-text">
                     <b>The serial number of the device generated and assigned by the manufacturer.</b><br>
                     This is a unique identifier for the device.<br>
@@ -30,7 +35,7 @@
             </div>
             <div class="col mb-3">
                 <label for="purchase_date" class="form-label">Purchase Date</label>
-                <input type="date" class="form-control" id="purchase_date" name="purchase_date" required>
+                <input type="date" class="form-control" id="purchase_date" name="purchase_date" {% if edit %} value="{{ device.purchase_date }}" {% endif %} required>
                 <div class="form-text">
                     <b>The date when the device was purchased according to the receipt.</b><br>
                     This is the date when the device was bought and not the date when it was received.<br>
@@ -58,7 +63,7 @@
             </div>
             <div class="col mb-3">
                 <label for="brand" class="form-label">Brand</label>
-                <input type="text" class="form-control" id="brand" name="brand" required>
+                <input type="text" class="form-control" id="brand" name="brand" {% if edit %} value="{{ device.brand }}" {% endif %} required>
                 <div class="form-text">
                     <b>The brand of the device.</b><br>
                     e.g. Asus, Dell, HP, Lenovo, Apple, Samsung.<br>
@@ -68,7 +73,7 @@
             </div>
             <div class="col mb-3">
                 <label for="model" class="form-label">Model</label>
-                <input type="text" class="form-control" id="model" name="model" required>
+                <input type="text" class="form-control" id="model" name="model" {% if edit %} value="{{ device.model }}" {% endif %} required>
                 <div class="form-text">
                     <b>The full model of the device including the SKU code.</b><br>
                     e.g. Vivobook Pro 15 OLED M6500QC, IdeaPad 3 14IAU7-82RJ00CUID.<br>
@@ -99,13 +104,13 @@
         <div class="row">
             <div class="col mb-3">
                 <label for="cpu" class="form-label">CPU</label>
-                <input type="text" class="form-control" id="cpu" name="cpu" required>
+                <input type="text" class="form-control" id="cpu" name="cpu" {% if edit %} value="{{ device.cpu }}" {% endif %} required>
                 <div class="form-text"><b>Include the brand and the full model name but do not include the clock speed and other details.</b><br>e.g. Intel Core i5-1135G7, AMD Ryzen 7 5800X.</div>
                 <div class="invalid-feedback">Please provide a valid CPU model. Check the format as mentioned above and try again.</div>
             </div>
             <div class="col mb-3">
                 <label for="gpu" class="form-label">GPU</label>
-                <input type="text" class="form-control" id="gpu" name="gpu">
+                <input type="text" class="form-control" id="gpu" name="gpu" {% if edit %} value="{{ device.gpu }}" {% endif %}>
                 <div class="form-text"><b>Include the brand and the full model name but do not include the clock speed and other details.</b><br>e.g. NVIDIA GeForce RTX 3060, AMD Radeon RX 6800 XT.</div>
                 <div class="invalid-feedback">Please provide a valid GPU model. Check the format as mentioned above and try again. Leave it completely empty if the device does not have a dedicated GPU.</div>
             </div>
@@ -114,14 +119,14 @@
         <div class="row">
             <div class="col mb-3">
                 <label for="physical_mem_type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" required>
+                <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" {% if edit %} value="{{ device.physical_mem_type }}" {% endif %} required>
                 <div class="form-text"><b>Include the type, speed, and whether it is slotted or soldered.</b><br>e.g. DDR4/2400/Slotted, DDR4L/3200/Soldered. </div>
                 <div class="invalid-feedback">Please provide a valid memory type. Check the format as mentioned above and try again.</div>
             </div>
             <div class="col mb-3">
                 <label for="physical_mem_size_gb" class="form-label">Size</label>
                 <div class="input-group has-validation">
-                    <input type="number" class="form-control" id="physical_mem_size_gb" name="physical_mem_size_gb" required>
+                    <input type="number" class="form-control" id="physical_mem_size_gb" name="physical_mem_size_gb" {% if edit %} value="{{ device.physical_mem_size_gb }}" {% endif %} required>
                     <span class="input-group-text">GB</span>
                     <div class="form-text">Set this to the <b>total amount of RAM installed</b> in the device.</div>
                     <div class="invalid-feedback">Please provide a valid memory size in GB.</div>
@@ -129,12 +134,12 @@
             </div>
             <div class="col mb-3">
                 <label for="physical_mem_slots" class="form-label">RAM Slots</label>
-                <input type="number" class="form-control" id="physical_mem_slots" name="physical_mem_slots" value="0" required>
+                <input type="number" class="form-control" id="physical_mem_slots" name="physical_mem_slots" {% if edit %} value="{{ device.physical_mem_slots }}" {% else %} value="0"  {% endif %} required>
                 <div class="form-text">If the RAM is soldered and has no extra slots for expansion, set this to 0. Else, if there are slots for expansion, set this to the total number of slots available.</div>
             </div>
             <div class="col mb-3">
                 <label for="physical_mem_slots_used" class="form-label">RAM Slots Used</label>
-                <input type="number" class="form-control" id="physical_mem_slots_used" name="physical_mem_slots_used" value="0" required>
+                <input type="number" class="form-control" id="physical_mem_slots_used" name="physical_mem_slots_used" {% if edit %} value="{{ device.physical_mem_slots_used }}" {% else %} value="0" {% endif %} required>
                 <div class="form-text">Set this to the number of slots that are currently used. The soldered RAM is not counted.</div>
             </div>
         </div>
@@ -156,7 +161,7 @@
             <div class="col mb-3">
                 <label for="storage_size_gb" class="form-label">Size</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" id="storage_size_gb" name="storage_size_gb" required>
+                    <input type="number" class="form-control" id="storage_size_gb" name="storage_size_gb" {% if edit %} value="{{ device.storage_size_gb }}" {% endif %} required>
                     <span class="input-group-text">GB</span>
                     <div class="form-text">Set this to the <b>size of the primary storage installed</b> in the device. Additions are not to be counted. Use the size as advertised on the device technical specifications.</div>
                     <div class="invalid-feedback">Please provide a valid <b>storage size in GB</b> not in TB.</div>
@@ -180,7 +185,7 @@
             <div class="col mb-3">
                 <label for="internal_display_size_inch" class="form-label">Size</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" id="internal_display_size_inch" name="internal_display_size_inch">
+                    <input type="number" class="form-control" id="internal_display_size_inch" name="internal_display_size_inch" {% if edit %} value="{{ device.internal_display_size_inch}}" {% endif %}>
                     <span class="input-group-text">inch</span>
                 </div>
                 <div class="form-text">Set this to the <b>size of the internal display</b> of the device if it has one. Else, leave it empty.</div>
@@ -189,9 +194,9 @@
             <div class="col mb-3">
                 <label for="internal_display_resolution" class="form-label">Resolution (Pixels)</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="internal_display_resolution_w" name="internal_display_resolution_w">
+                    <input type="text" class="form-control" id="internal_display_resolution_w" name="internal_display_resolution_w" {% if edit %} value="{{ device.internal_display_resolution.split('x')[0] }}" {% endif %}>
                     <span class="input-group-text">x</span>
-                    <input type="text" class="form-control" id="internal_display_resolution_h" name="internal_display_resolution_h">
+                    <input type="text" class="form-control" id="internal_display_resolution_h" name="internal_display_resolution_h" {% if edit %} value="{{ device.internal_display_resolution.split('x')[1] }}" {% endif %}>
                     <span class="input-group-text">pixels</span>
                     <div class="form-text">Set this to the <b>resolution of the internal display</b> of the device if it has one. Use the resolution as advertised in the technical specifcations, not the configured resolution. Else, leave it empty.</div>
                     <div class="invalid-feedback">Please provide a valid resolution in pixels. If the device does not have an internal display, leave it empty.</div>
@@ -243,20 +248,45 @@
         <div class="row">
             <div class="col mb-3">
                 <label for="wireless_mac" class="form-label">Wi-Fi MAC Address</label>
-                <input type="text" class="form-control" id="wireless_mac" name="wireless_mac" placeholder="xx:xx:xx:xx:xx:xx">
+                <input type="text" class="form-control" id="wireless_mac" name="wireless_mac" placeholder="xx:xx:xx:xx:xx:xx" {% if edit %} value="{{ device.wireless_mac }}" {% endif %}>
                 <div class="form-text">Set this to the <b>Wi-Fi MAC address</b> of the device if it has one. Else, leave it empty.</div>
                 <div class="invalid-feedback">Please provide a valid Wi-Fi MAC address. Make sure the delimiter is a colon and the format is correct.</div>
             </div>
             <div class="col mb-3">
                 <label for="ethernet_mac" class="form-label">Ethernet MAC Address</label>
-                <input type="text" class="form-control" id="ethernet_mac" name="ethernet_mac" placeholder="xx:xx:xx:xx:xx:xx">
+                <input type="text" class="form-control" id="ethernet_mac" name="ethernet_mac" placeholder="xx:xx:xx:xx:xx:xx" {% if edit %} value="{{ device.ethernet_mac }}" {% endif %}>
                 <div class="form-text">Set this to the <b>Ethernet MAC address</b> of the device if it has one. Else, leave it empty.</div>
                 <div class="invalid-feedback">Please provide a valid Ethernet MAC address. Make sure the delimiter is a colon and the format is correct.</div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary" formaction="/api/device/add">Add Device</button>
-        <button type="button" class="btn btn-outline-danger" onclick="show_reset_modal()">Reset Form</button>
+        {% if edit %}
+        <button type="submit" class="btn btn-primary" formaction="/api/device/edit"><i class="fa-regular fa-floppy-disk"></i> Save Changes</button>
+        <button type="button" class="btn btn-outline-danger" onclick="show_delete_modal()"><i class="fa-regular fa-trash-can"></i> Delete Device</button>
+        {% else %}
+        <button type="submit" class="btn btn-primary" formaction="/api/device/add"><i class="fa-regular fa-floppy-disk"></i> Add Device</button>
+        <button type="button" class="btn btn-outline-danger" onclick="show_reset_modal()"><i class="fa-solid fa-clock-rotate-left"></i> Reset Form</button>
+        {% endif %}
     </form>
+    {% if edit %}
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this device?</p>
+                    <p><mark>This action cannot be undone.</mark></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="delete_device()">Delete</button>
+                </div>
+            </div>
+        </div>  
+    </div>
+    {% else %}
     <div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -275,6 +305,7 @@
             </div>
         </div>  
     </div>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -311,7 +342,7 @@
 
         // Validate CPU
         var cpu = document.getElementById('cpu');
-        if (cpu.value.match(/^(Intel (Core|Pentium|Celeron)|AMD (Ryzen|Athlon|A-Series)|MediaTek (Dimensity|Helio)|Exynos [0-9]+|Qualcomm Snapdragon [0-9]+|Apple A[0-9]+|Nvidia Tegra [A-Za-z0-9-]+|IBM Power[0-9]+|ARM Cortex-[A-Za-z0-9-]+) [A-Za-z0-9- ]+$/))
+        if (cpu.value.match(/^(Intel (Core|Pentium|Celeron)|AMD (Ryzen|Athlon|A-Series)|MediaTek (Dimensity|Helio)|Exynos [0-9]+|Qualcomm Snapdragon+|Apple A[0-9]+|ARM Cortex-[A-Za-z0-9-]+) [A-Za-z0-9- ]+$/))
         {
             cpu.setCustomValidity('');
         }
@@ -323,7 +354,7 @@
 
         // Validate GPU
         var gpu = document.getElementById('gpu');
-        if (gpu.value == '' || gpu.value.match(/^(NVIDIA GeForce [A-Za-z0-9-]+|AMD Radeon [A-Za-z0-9-]+|Intel (UHD|Iris Xe|HD Graphics|Xe Graphics)|Apple M[0-9]+|Qualcomm Adreno [0-9]+|ARM Mali-[A-Za-z0-9-]+|Broadcom VideoCore|Imagination PowerVR [A-Za-z0-9-]+|Vivante GC[0-9]+|Mali-[A-Za-z0-9-]+) [A-Za-z0-9- ]+$/))
+        if (gpu.value == '' || gpu.value.match(/^(NVIDIA GeForce [A-Za-z0-9-]+|AMD Radeon [A-Za-z0-9-]+|Intel (UHD|Iris Xe|HD Graphics|Xe Graphics)|Apple M[0-9]+|Qualcomm Adreno+|ARM Mali-[A-Za-z0-9-]+|Mali-[A-Za-z0-9-]+) [A-Za-z0-9- ]+$/))
         {
             gpu.setCustomValidity('');
         }    
@@ -426,4 +457,34 @@
         form.classList.add('was-validated');
     });
 </script>
+
+{% if edit %}
+<script>
+    function selectElement(id, valueToSelect) 
+    {    
+        let element = document.getElementById(id);
+        element.value = valueToSelect;
+    }
+
+    selectElement('type', '{{ device.type }}');
+    selectElement('physical_mem_type', '{{ device.physical_mem_type }}');
+    selectElement('storage_type', '{{ device.storage_type }}');
+    selectElement('internal_display_type', '{{ device.internal_display_type }}');
+    selectElement('is_touchscreen', '{{ "Yes" if device.is_touchscreen else "No" }}');
+    selectElement('operating_system', '{{ device.operating_system }}');
+
+    function show_delete_modal()
+    {
+        var modal = new bootstrap.Modal(document.getElementById('deleteModal'), { keyboard: false });
+        modal.show();
+    }
+
+    function delete_device()
+    {
+        document.querySelector('form').setAttribute('action', '/api/device/delete');
+        document.querySelector('form').submit();
+    }
+</script>
+{% endif %}
+
 {% endblock %}
