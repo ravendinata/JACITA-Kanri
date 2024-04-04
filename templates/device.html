@@ -33,13 +33,17 @@
     <form id="deviceForm" method="POST">
         <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
         <div class="row">
-            <div class="col mb-3">
+            <div class="col-md-6 mb-3">
                 <label for="serial_number" class="form-label">Serial Number</label>
                 <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ device.serial_number }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="purchase_date" class="form-label">Purchase Date</label>
                 <input type="date" class="form-control" id="purchase_date" name="purchase_date" value="{{ device.purchase_date }}" readonly>
+            </div>
+            <div class="col mb-3">
+                <label for="status" class="form-label">Status</label>
+                <input type="text" class="form-control" id="status" name="status" value="{{ device.status }}" readonly>
             </div>
         </div>
         <div class="row">
