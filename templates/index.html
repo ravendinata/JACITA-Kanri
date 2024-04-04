@@ -18,7 +18,14 @@
                     <p class="card-text">View and manage device inventory in the organization.</p>
                 </div>
                 <div class="card-footer">
-                    <a href="/devices" class="btn btn-primary float-end">Device Inventory</a>
+                    <div class="row">
+                        <div class="col">
+                            <small class="card-text text-muted float-start">{{ count_device }} registered device{% if count_device > 1 %}s{% endif %}</small>
+                        </div>
+                        <div class="col">
+                            <a href="/devices" class="btn btn-primary float-end">Device Inventory</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
