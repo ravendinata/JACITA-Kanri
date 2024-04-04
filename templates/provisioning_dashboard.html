@@ -16,20 +16,26 @@
     <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body">
-                <h1 class="display-5"><i class="fa-solid fa-laptop-file"></i></h1>
+                <h1 class="display-5"><i class="fa-solid fa-user-lock"></i></h1>
                 <h5 class="card-title">Provisioned Devices</h5>
-                <p class="card-text">View and manage devices that are currently provisioned to users.</p>
+                <p class="card-text">View and manage devices that are currently provisioned/assigned to users.</p>
             </div>
             <div class="card-footer">
-                <small class="card-text text-muted float-start">{{ count_provisioned_device }} provisioned device{% if count_provisioned_device > 1 %}s{% endif %}</small>
-                <a href="/provisioned_devices" class="btn btn-primary float-end">View Provisioned Devices</a>
+                <div class="row">
+                    <div class="col">
+                        <small class="card-text text-muted float-start">{{ count_provisioned_device }} provisioned device{% if count_provisioned_device > 1 %}s{% endif %}</small>
+                    </div>
+                    <div class="col">
+                        <a href="/provisioned_devices" class="btn btn-primary float-end">View Assigned Devices</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body">
-                <h1 class="display-5"><i class="fa-solid fa-clipboard-user"></i></h1>
+                <h1 class="display-5"><i class="fa-solid fa-stamp"></i></h1>
                 <h5 class="card-title">Provision a Device</h5>
                 <p class="card-text">Assign a device to users for work or education, and checkout the device.</p>
             </div>
