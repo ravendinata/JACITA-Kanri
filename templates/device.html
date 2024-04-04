@@ -35,29 +35,29 @@
         <div class="row">
             <div class="col mb-3">
                 <label for="serial_number" class="form-label">Serial Number</label>
-                <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ device.serial_number }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ device.serial_number }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="purchase_date" class="form-label">Purchase Date</label>
-                <input type="date" class="form-control" id="purchase_date" name="purchase_date" value="{{ device.purchase_date }}" required {% if not edit %} readonly {% endif %}>
+                <input type="date" class="form-control" id="purchase_date" name="purchase_date" value="{{ device.purchase_date }}" readonly>
             </div>
         </div>
         <div class="row">
             <div class="col mb-3">
                 <label for="type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="type" name="type" value="{{ device.type }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="type" name="type" value="{{ device.type }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="brand" class="form-label">Brand</label>
-                <input type="text" class="form-control" id="brand" name="brand" value="{{ device.brand }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="brand" name="brand" value="{{ device.brand }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="model" class="form-label">Model</label>
-                <input type="text" class="form-control" id="model" name="model" value="{{ device.model }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="model" name="model" value="{{ device.model }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="operating_system" class="form-label">Operating System</label>
-                <input type="text" class="form-control" id="operating_system" name="operating_system" value="{{ device.operating_system }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="operating_system" name="operating_system" value="{{ device.operating_system }}" readonly>
             </div>
         </div>
         <hr>
@@ -66,60 +66,60 @@
         <div class="row">
             <div class="col mb-3">
                 <label for="cpu" class="form-label">CPU</label>
-                <input type="text" class="form-control" id="cpu" name="cpu" value="{{ device.cpu }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="cpu" name="cpu" value="{{ device.cpu }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="gpu" class="form-label">GPU</label>
-                <input type="text" class="form-control" id="gpu" name="gpu" value="{{ device.gpu }}" {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="gpu" name="gpu" value="{{ device.gpu }}" readonly>
             </div>
         </div>
         <h5>Memory</h5>
         <div class="row">
             <div class="col mb-3">
                 <label for="physical_mem_type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" value="{{ device.physical_mem_type }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" value="{{ device.physical_mem_type }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="physical_mem_size_gb" class="form-label">RAM (GB)</label>
-                <input type="number" class="form-control" id="physical_mem_size_gb" name="physical_mem_size_gb" value="{{ device.physical_mem_size_gb }}" required {% if not edit %} readonly {% endif %}>
+                <input type="number" class="form-control" id="physical_mem_size_gb" name="physical_mem_size_gb" value="{{ device.physical_mem_size_gb }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="physical_mem_slots" class="form-label">RAM Slots</label>
-                <input type="number" class="form-control" id="physical_mem_slots" name="physical_mem_slots" value="{{ device.physical_mem_slots }}" required {% if not edit %} readonly {% endif %}>
+                <input type="number" class="form-control" id="physical_mem_slots" name="physical_mem_slots" value="{{ device.physical_mem_slots }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="physical_mem_slots_used" class="form-label">RAM Slots Used</label>
-                <input type="number" class="form-control" id="physical_mem_slots_used" name="physical_mem_slots_used" value="{{ device.physical_mem_slots_used }}" required {% if not edit %} readonly {% endif %}>
+                <input type="number" class="form-control" id="physical_mem_slots_used" name="physical_mem_slots_used" value="{{ device.physical_mem_slots_used }}" readonly>
             </div>
         </div>
         <h5>Storage</h5>
         <div class="row">
             <div class="col mb-3">
                 <label for="storage_type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="storage_type" name="storage_type" value="{{ device.storage_type }}" required {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="storage_type" name="storage_type" value="{{ device.storage_type }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="storage_size_gb" class="form-label">Size (GB)</label>
-                <input type="number" class="form-control" id="storage_size_gb" name="storage_size_gb" value="{{ device.storage_size_gb }}" required {% if not edit %} readonly {% endif %}>
+                <input type="number" class="form-control" id="storage_size_gb" name="storage_size_gb" value="{{ device.storage_size_gb }}" readonly>
             </div>
         </div>
         <h5>Display</h5>
         <div class="row">
             <div class="col mb-3">
                 <label for="internal_display_type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="internal_display_type" name="internal_display_type" value="{{ device.internal_display_type }}" {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="internal_display_type" name="internal_display_type" value="{{ device.internal_display_type }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="internal_display_size_inch" class="form-label">Size (Inches)</label>
-                <input type="text" class="form-control" id="internal_display_size_inch" name="internal_display_size_inch" value="{{ device.internal_display_size_inch }}" {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="internal_display_size_inch" name="internal_display_size_inch" value="{{ device.internal_display_size_inch }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="internal_display_resolution" class="form-label">Resolution (WxH; Pixels)</label>
-                <input type="text" class="form-control" id="internal_display_resolution" name="internal_display_resolution" value="{{ device.internal_display_resolution }}" {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="internal_display_resolution" name="internal_display_resolution" value="{{ device.internal_display_resolution }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="is_touchscreen" class="form-label">Touchscreen?</label>
-                <input type="text" class="form-control" id="is_touchscreen" name="is_touchscreen" value="{{ 'Yes' if device.is_touchscreen else 'No' }}" {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="is_touchscreen" name="is_touchscreen" value="{{ 'Yes' if device.is_touchscreen else 'No' }}" readonly>
             </div>
         </div>
         <hr>
@@ -127,11 +127,11 @@
         <div class="row">
             <div class="col mb-3">
                 <label for="wireless_mac" class="form-label">Wi-Fi MAC Address</label>
-                <input type="text" class="form-control" id="wireless_mac" name="wireless_mac" value="{{ device.wireless_mac }}" {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="wireless_mac" name="wireless_mac" value="{{ device.wireless_mac }}" readonly>
             </div>
             <div class="col mb-3">
                 <label for="ethernet_mac" class="form-label">Ethernet MAC Address</label>
-                <input type="text" class="form-control" id="ethernet_mac" name="ethernet_mac" value="{{ device.ethernet_mac }}" {% if not edit %} readonly {% endif %}>
+                <input type="text" class="form-control" id="ethernet_mac" name="ethernet_mac" value="{{ device.ethernet_mac }}" readonly>
             </div>
         </div>
     </form>
