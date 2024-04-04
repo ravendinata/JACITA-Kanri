@@ -40,10 +40,10 @@ $(document).ready(function ()
         columns: 
         [
             { data: 'serial_number' },
-            { data: 'brand', searchable: false, orderable: true },
+            { data: 'brand', searchable: true, orderable: true },
             { data: 'model', searchable: true, orderable: true },
             { data: 'cpu', searchable: true, orderable: true },
-            { data: 'physical_mem_size_gb', searchable: false, orderable: true },
+            { data: 'physical_mem_size_gb', searchable: true, orderable: true },
             { data: 'wireless_mac', searchable: true, orderable: true },
             {
                 name: 'actions', 
@@ -150,7 +150,8 @@ $(document).ready(function ()
                 searchPanes: 
                 {
                     show: true,
-                    initCollapsed: true
+                    initCollapsed: true,
+                    cascadePanes: true
                 }
             },
             bottomStart: null,
