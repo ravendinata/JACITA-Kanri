@@ -39,6 +39,10 @@
         "status": "exception",
         "message": "Error occurred while adding provisioning transaction record to database."
     },
+    "778500PD": {
+        "status": "exception",
+        "message": "Device already provisioned. Please check if the device has been returned or check the serial number try again."
+    },
     "778501": {
         "status": "exception",
         "message": "Error occurred while modifying provisioning transaction record in database."

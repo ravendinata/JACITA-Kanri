@@ -42,6 +42,7 @@ class Devices(db.Model):
     is_touchscreen = db.Column(db.Integer)
     wireless_mac = db.Column(db.String(17))
     ethernet_mac = db.Column(db.String(17))
+    status = db.Column(db.String(45))
 
     def __repr__(self):
         return f"<Device: {self.serial_number}>"
@@ -269,12 +270,19 @@ def provision_device():
     is_self_transaction = request.form['is_self_transaction']
     officer_email = request.form['officer_email']
 
+    # Check if the device is already provisioned
+    device = Devices.query.filter_by(serial_number = transacted_device).first()
+    if device.status == 'Provisioned':
+        return redirect(url_for('page_provision_device', status_code = "778500PD"))
+
     device_provisioning = DeviceProvisioning(transaction_id = transaction_id,
                                              transaction_type = transaction_type,
                                              transacted_device = transacted_device,
                                              client_email = client_email,
                                              is_self_transaction = is_self_transaction,
                                              officer_email = officer_email)
+    
+    device.status = 'Provisioned'
     
     try:
         db.session.add(device_provisioning)
