@@ -123,6 +123,16 @@ def page_provision_device():
 
     return render_template('provision_device.html', title = 'Provision Device', transaction_id = generate_txn_id('DEV'))
 
+@app.route('/provisioning_dashboard')
+def page_provisioning_dashboard():
+    count_provisioned_device = db.session.query(func.count(Devices.status)).filter(Devices.status == 'Provisioned').scalar()
+    
+    if request.args.get('status_code'):
+        status = get_status(request.args.get('status_code'))
+        return render_template('provisioning_dashboard.html', title = 'Provisioning Dashboard', count_provisioned_device = count_provisioned_device, status = status['status'], message = status['message'])
+    
+    return render_template('provisioning_dashboard.html', title = 'Provisioning Dashboard', count_provisioned_device = count_provisioned_device)
+
 @app.route('/about')
 def page_about():
     return render_template('about.html', title = 'About')
@@ -273,7 +283,7 @@ def provision_device():
         print(f"ERROR/EX: {e}")
         return redirect(url_for('page_provision_device', status_code = "778500"))
     
-    return redirect(url_for('page_provision_device', status_code = "778200"))
+    return redirect(url_for('page_provisioning_dashboard', status_code = "778200"))
 
 @app.route('/api/login', methods = ['POST'])
 def login():
