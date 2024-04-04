@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -47,6 +48,25 @@ class Devices(db.Model):
     def to_dict(self):
         return { c.name: getattr(self, c.name) for c in self.__table__.columns }
     
+class DeviceProvisioning(db.Model):
+    transaction_id = db.Column(db.String(20), primary_key = True)
+    transaction_type = db.Column(db.String(45))
+    transaction_date = db.Column(db.DateTime, server_default = func.now())
+    transacted_device = db.Column(db.String(15), db.ForeignKey('devices.serial_number'))
+    client_email = db.Column(db.String(100))
+    is_self_transaction = db.Column(db.Integer)
+    officer_email = db.Column(db.String(100))
+
+    def __repr__(self):
+        return f"<DeviceProvisioning: {self.transaction_id}>"
+    
+    def to_dict(self):
+        return { c.name: getattr(self, c.name) for c in self.__table__.columns }
+    
+def generate_txn_id(category: str):
+    return f"{category}-{str(uuid.uuid4())[:16].upper()}"
+
+# Web Routes    
 @app.route('/')
 def page_home():
     return render_template('index.html', title = 'Home')
@@ -87,12 +107,19 @@ def page_device_edit(serial_number):
     
 @app.route('/devices')
 def page_devices():
-
     if request.args.get('status_code'):
         status = get_status(request.args.get('status_code'))
         return render_template('devices.html', title = 'Devices', status = status['status'], message = status['message'])
     
     return render_template('devices.html', title = 'Devices')
+
+@app.route('/provision_device')
+def page_provision_device():
+    if request.args.get('status_code'):
+        status = get_status(request.args.get('status_code'))
+        return render_template('provision_device.html', title = 'Provision Device', status = status['status'], message = status['message'], transaction_id = generate_txn_id('DEV'))
+
+    return render_template('provision_device.html', title = 'Provision Device', transaction_id = generate_txn_id('DEV'))
 
 @app.route('/about')
 def page_about():
@@ -220,6 +247,31 @@ def get_devices():
     devices = Devices.query.all()
     return { 'data': [ device.to_dict() for device in devices ] }
 
+@app.route('/api/provisioning/device/add', methods = ['POST'])
+def provision_device():
+    print(request.form)
+    transaction_id = request.form['transaction_id']
+    transaction_type = request.form['transaction_type']
+    transacted_device = request.form['transacted_device']
+    client_email = request.form['client_email']
+    is_self_transaction = request.form['is_self_transaction']
+    officer_email = request.form['officer_email']
+
+    device_provisioning = DeviceProvisioning(transaction_id = transaction_id,
+                                             transaction_type = transaction_type,
+                                             transacted_device = transacted_device,
+                                             client_email = client_email,
+                                             is_self_transaction = is_self_transaction,
+                                             officer_email = officer_email)
+    
+    try:
+        db.session.add(device_provisioning)
+        db.session.commit()
+    except Exception as e:
+        print(f"ERROR/EX: {e}")
+        return redirect(url_for('page_provision_device', status_code = "778500"))
+    
+    return redirect(url_for('page_provision_device', status_code = "778200"))
 
 @app.route('/api/login', methods = ['POST'])
 def login():

@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if status == 'exception' %}
+<div class="alert alert-danger" role="alert" id="alert">
+    <i class="fa-solid fa-triangle-exclamation"></i> An error occurred while saving changes. Exception: {{ message|default('-') }}
+</div>
+{% endif %}
+<div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
+    <h2>{{ title }}</h2>
+    <hr>
+    <form class="needs-validation" id="deviceProvisioningForm" method="POST" novalidate>
+        <input type="hidden" name="transaction_type" value="Checkout"> 
+        <div class="row">
+            <h1>Checkout Information</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label for="transaction_id" class="form-label">Transaction ID</label>
+                <input type="text" class="form-control" id="transaction_id" name="transaction_id" value="{{ transaction_id }}" readonly>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="is_self_transaction" class="form-label">Self Checkout</label>
+                <select class="form-select" id="is_self_transaction" name="is_self_transaction">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+                <div class="form-text">If you are checking out a device for yourself, set this option to 'Yes'.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="transacted_device" class="form-label">Transacted Device Serial Number</label>
+                <input type="text" class="form-control" id="transacted_device" name="transacted_device" required>
+                <div class="form-text">Enter the registered serial number of the device to be checked out.</div>
+                <div class="invalid-feedback" id="invalidMessageSerial">Please enter the device serial number.</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="client_email" class="form-label">Client Email</label>
+                <input type="email" class="form-control" id="client_email" name="client_email" required>
+                <div class="form-text">
+                    Enter a valid email address that is within the JAC School domain (###@jacschool.sch.id).<br>
+                    If the client does not have one, ask Microsoft admin to set one up.<br>
+                    This is required because it is used to identify the client.
+                </div>
+                <div class="invalid-feedback">Please provide a valid email address that is within the JAC School domain (###@jacschool.sch.id).</div>
+            </div>
+            <div class="col-md-6 mb-3" id="officerInfoBlock">
+                <label for="officer_email" class="form-label">Officer Email</label>
+                <input type="email" class="form-control" id="officer_email" name="officer_email" required>
+                <div class="form-text">
+                    Enter a valid email address that is within the JAC School domain (###@jacschool.sch.id).<br>
+                    This is required because it is used to identify the officer.
+                </div>
+                <div class="invalid-feedback" id="invalidMessageOfficer">
+                    Please enter <b>your email address</b>.<br>
+                    If you are doing a self-transaction, please set the self transaction option to 'Yes'.
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" formaction="/api/provisioning/device/add"><i class="fa-regular fa-floppy-disk"></i> Checkout Device</button>
+        <button type="button" class="btn btn-outline-danger" onclick="reset_form()"><i class="fa-solid fa-clock-rotate-left"></i> Reset Form</button>
+    </form>
+    <div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resetModalLabel">Reset Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to reset the form?</p>
+                    <p><mark>This action will clear the form and this cannot be undone.</mark></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="show_reset_modal()">Reset</button>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() 
+    {
+        $('#is_self_transaction').change(function() 
+        {
+            document.getElementById('officer_email').value = null;
+            
+            if ($(this).val() == '1') 
+            {
+                $('#officerInfoBlock').hide(); 
+                document.getElementById('officer_email').required = false;
+            }
+            else 
+            {
+                $('#officerInfoBlock').show();
+                document.getElementById('officer_email').required = true;
+            }
+        });
+
+        if ($('#is_self_transaction').val() == '1') 
+        {
+            $('#officerInfoBlock').hide();
+            document.getElementById('officer_email').required = false;
+            document.getElementById('officer_email').value = null;
+        }
+    });
+
+    function show_reset_modal() 
+    {
+        var modal = new bootstrap.Modal(document.getElementById('resetModal'), { keyboard: false });
+        modal.show();
+    }
+
+    function reset_form() 
+    {
+        document.getElementById('deviceProvisioningForm').reset();
+        $('#resetModal').modal('hide');
+    }
+
+    async function validateDevice() {
+        var transactedDevice = document.getElementById('transacted_device').value;
+        var valid = false; // Assuming valid is initially false
+
+        try {
+            const response = await fetch('/api/device/search?serial_number=' + transactedDevice);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            if (data.data == null || data.data.length == 0) 
+            {
+                document.getElementById('transacted_device').setCustomValidity('Device serial number does not exist.');
+                document.getElementById('invalidMessageSerial').textContent = 'Device serial number does not exist.';
+            } 
+            else 
+            {
+                valid = true;
+                document.getElementById('transacted_device').setCustomValidity('');
+            }
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+        }
+
+        return valid;
+    }
+
+    async function customValidation()
+    {
+        var valid = true;
+
+        // Check if device serial number exists
+        var transactedDevice = document.getElementById('transacted_device').value;
+        if (transactedDevice == '') 
+        {
+            valid = false;
+            document.getElementById('transacted_device').setCustomValidity('Please enter the transacted device serial number.');
+            document.getElementById('invalidMessageSerial').textContent = 'Please enter the transacted device serial number.';
+        }
+        else
+        {
+            valid = await validateDevice();
+        }
+
+        var clientEmail = document.getElementById('client_email').value;
+        var officerEmail = document.getElementById('officer_email').value;
+
+        if (!clientEmail.endsWith('@jacschool.sch.id')) 
+        {
+            valid = false;
+            document.getElementById('client_email').setCustomValidity('Client email must end with @jacschool.sch.id.');
+        } 
+        else 
+        {
+            document.getElementById('client_email').setCustomValidity('');
+        }
+
+        if (document.getElementById('is_self_transaction').value == '0')
+        {
+            if (clientEmail == officerEmail)
+            {
+                valid = false;
+                document.getElementById('officer_email').setCustomValidity('Client and Officer email cannot be the same.');
+                document.getElementById('invalidMessageOfficer').textContent = "Client and Officer email cannot be the same. If you are doing a self-transaction, please set the self transaction option to \'Yes\'.";
+            }
+            else if (!officerEmail.endsWith('@jacschool.sch.id'))
+            {
+                valid = false;
+                document.getElementById('officer_email').setCustomValidity('Officer email must end with @jacschool.sch.id.');
+                document.getElementById('invalidMessageOfficer').textContent = 'Officer email must end with @jacschool.sch.id.';
+            } 
+            else 
+            {
+                document.getElementById('officer_email').setCustomValidity('');
+            }
+        } 
+        else 
+        {
+            document.getElementById('officer_email').setCustomValidity('');
+        }
+
+        return valid;
+    }
+
+    var form = document.getElementById('deviceProvisioningForm');
+
+    form.addEventListener('change', async function() { await customValidation(); });
+    form.addEventListener('input', async function() { await customValidation(); });
+
+    form.addEventListener('submit', function(event) 
+    {
+        if (this.checkValidity() === false) 
+        {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        this.classList.add('was-validated');
+    });
+</script>
+{% endblock %}
