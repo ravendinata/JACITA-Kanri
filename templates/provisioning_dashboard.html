@@ -22,8 +22,8 @@
             </div>
             <div class="card-footer">
                 <div class="row">
-                    <div class="col">
-                        <small class="card-text text-muted float-start">{{ count_provisioned_device }} provisioned device{% if count_provisioned_device > 1 %}s{% endif %}</small>
+                    <div class="col d-flex align-items-center">
+                        <small class="card-text text-muted" style="bottom: 0">{{ count_provisioned_device }} provisioned device{% if count_provisioned_device > 1 %}s{% endif %}</small>
                     </div>
                     <div class="col">
                         <a href="/provisioned_devices" class="btn btn-primary float-end">View Assigned Devices</a>
