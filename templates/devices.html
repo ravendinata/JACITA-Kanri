@@ -13,21 +13,24 @@
 <span class="float-end"><a class="btn btn-primary" href="/add_device"><i class="fa-solid fa-plus"></i> Add New Device</a></span>
 <h2>Device Inventory</h2>
 <hr>
-<table id="data" class="table table-striped" style="width: 100%;">
-    <thead>
-        <tr>
-            <th>Serial Number</th>
-            <th>Brand</th>
-            <th>Model</th>
-            <th>CPU</th>
-            <th>RAM (GB)</th>
-            <th>MAC Address</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+<div class="container-fluid" style="padding-bottom: 48px;">
+    <table id="data" class="table table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Serial Number</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>CPU</th>
+                <th>RAM (GB)</th>
+                <th>MAC Address</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -45,6 +48,7 @@ $(document).ready(function ()
             { data: 'cpu', searchable: true, orderable: true },
             { data: 'physical_mem_size_gb', searchable: true, orderable: true },
             { data: 'wireless_mac', searchable: true, orderable: true },
+            { data: 'status', searchable: true, orderable: true},
             {
                 name: 'actions', 
                 searchable: false,
@@ -59,11 +63,12 @@ $(document).ready(function ()
         columnDefs: 
         [
             {
-                searchPanes: 
-                {
-                    show: true
-                },
-                targets: [1, 2, 3, 5]
+                searchPanes: { show: true },
+                targets: [1, 2, 3, 4, 6]
+            },
+            {
+                searchPanes: { show: false },
+                targets: [0, 5, 7]
             }
         ],
         fixedHeader: true,
