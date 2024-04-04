@@ -21,6 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app, engine_options = { 'pool_recycle': 3600 })
 
 class Devices(db.Model):
+    date_added = db.Column(db.DateTime, server_default = func.now())
     serial_number = db.Column(db.String(15), primary_key = True)
     brand = db.Column(db.String(75))
     model = db.Column(db.String(100))
@@ -38,7 +39,7 @@ class Devices(db.Model):
     internal_display_type = db.Column(db.String(25))
     internal_display_size_inch = db.Column(db.Float)
     internal_display_resolution = db.Column(db.String(10))
-    is_touchscreen = db.Column(db.Boolean)
+    is_touchscreen = db.Column(db.Integer)
     wireless_mac = db.Column(db.String(17))
     ethernet_mac = db.Column(db.String(17))
 
@@ -69,7 +70,8 @@ def generate_txn_id(category: str):
 # Web Routes    
 @app.route('/')
 def page_home():
-    return render_template('index.html', title = 'Home')
+    count_device = db.session.query(func.count(Devices.serial_number)).scalar()
+    return render_template('index.html', title = 'Home', count_device = count_device)
 
 @app.route('/device')
 def page_device_redirect():
@@ -162,7 +164,7 @@ def add_device():
     internal_display_size_inch = request.form['internal_display_size_inch']
     internal_display_resolution_w = request.form['internal_display_resolution_w']
     internal_display_resolution_h = request.form['internal_display_resolution_h']
-    is_touchscreen = bool(request.form['is_touchscreen'])
+    is_touchscreen = request.form['is_touchscreen']
     wireless_mac = request.form['wireless_mac']
     ethernet_mac = request.form['ethernet_mac']
 
@@ -218,7 +220,7 @@ def edit_device():
     internal_display_resolution_w = request.form['internal_display_resolution_w']
     internal_display_resolution_h = request.form['internal_display_resolution_h']
     device.internal_display_resolution = f"{internal_display_resolution_w}x{internal_display_resolution_h}"
-    device.is_touchscreen = bool(request.form['is_touchscreen'])
+    device.is_touchscreen = request.form['is_touchscreen']
     device.wireless_mac = request.form['wireless_mac']
     device.ethernet_mac = request.form['ethernet_mac']
 

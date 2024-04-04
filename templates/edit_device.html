@@ -205,8 +205,8 @@
             <div class="col mb-3">
                 <label for="is_touchscreen" class="form-label">Touchscreen?</label>
                 <select class="form-select" id="is_touchscreen" name="is_touchscreen">
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
                 </select>
                 <div class="form-text">Set this to Yes if the internal display of the device is a touchscreen. Else, set it to No.</div>
             </div>
@@ -470,7 +470,7 @@
     selectElement('physical_mem_type', '{{ device.physical_mem_type }}');
     selectElement('storage_type', '{{ device.storage_type }}');
     selectElement('internal_display_type', '{{ device.internal_display_type }}');
-    selectElement('is_touchscreen', '{{ "Yes" if device.is_touchscreen else "No" }}');
+    selectElement('is_touchscreen', '{{ device.is_touchscreen }}');
     selectElement('operating_system', '{{ device.operating_system }}');
 
     function show_delete_modal()
