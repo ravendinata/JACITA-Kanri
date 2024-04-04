@@ -65,6 +65,18 @@ class DeviceProvisioning(db.Model):
     def to_dict(self):
         return { c.name: getattr(self, c.name) for c in self.__table__.columns }
     
+class AssignedDevices(db.Model):
+    transaction_id = db.Column(db.String(20), primary_key = True)
+    transaction_date = db.Column(db.DateTime)
+    device_serial_number = db.Column(db.String(15), db.ForeignKey('devices.serial_number'))
+    assignee = db.Column(db.String(100))
+
+    def __repr__(self):
+        return f"<AssignedDevice: {self.transaction_id}>"
+    
+    def to_dict(self):
+        return { c.name: getattr(self, c.name) for c in self.__table__.columns }
+    
 def generate_txn_id(category: str):
     return f"{category}-{str(uuid.uuid4())[:16].upper()}"
 
@@ -123,6 +135,11 @@ def page_provision_device():
         return render_template('provision_device.html', title = 'Provision Device', status = status['status'], message = status['message'], transaction_id = generate_txn_id('DEV'))
 
     return render_template('provision_device.html', title = 'Provision Device', transaction_id = generate_txn_id('DEV'))
+
+@app.route('/provisioning/assigned_devices')
+def page_assigned_devices():
+    assigned_devices = db.session.query(AssignedDevices)    
+    return render_template('assigned_devices.html', title = 'Assigned Devices', assigned_devices = [ txn.to_dict() for txn in assigned_devices ])
 
 @app.route('/provisioning_dashboard')
 def page_provisioning_dashboard():
@@ -259,6 +276,12 @@ def delete_device():
 def get_devices():
     devices = Devices.query.all()
     return { 'data': [ device.to_dict() for device in devices ] }
+
+@app.route('/api/provisioning/assigned_devices', methods = ['GET'])
+def list_provisioned_devices():
+    assigned_devices = db.session.query(AssignedDevices)
+
+    return { 'data': [ txn.to_dict() for txn in assigned_devices ] }
 
 @app.route('/api/provisioning/device/add', methods = ['POST'])
 def provision_device():
