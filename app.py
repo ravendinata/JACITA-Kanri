@@ -58,6 +58,7 @@ class DeviceProvisioning(db.Model):
     client_email = db.Column(db.String(100))
     is_self_transaction = db.Column(db.Integer)
     officer_email = db.Column(db.String(100))
+    prev_transaction_id = db.Column(db.String(20), db.ForeignKey('device_provisioning.transaction_id'))
 
     def __repr__(self):
         return f"<DeviceProvisioning: {self.transaction_id}>"
