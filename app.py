@@ -95,7 +95,8 @@ def generate_txn_id(category: str):
 @app.route('/')
 def page_home():
     count_device = db.session.query(func.count(Devices.serial_number)).scalar()
-    return render_template('index.html', title = 'Home', count_device = count_device)
+    count_assigned_device = db.session.query(func.count(AssignedDevices.transaction_id)).scalar()
+    return render_template('index.html', title = 'Home', count_device = count_device, count_assigned_device = count_assigned_device)
 
 @app.route('/device')
 def page_device_redirect():
@@ -172,7 +173,7 @@ def page_view_provisioned_device(transaction_id):
 
 @app.route('/provisioning/view/history')
 def page_view_provisioned_device_history():
-    return render_template('provisioning_history.html', title = 'View Transaction History')
+    return render_template('provisioning_history.html', title = 'Transaction History/Log')
 
 @app.route('/provisioning_dashboard')
 def page_provisioning_dashboard():
