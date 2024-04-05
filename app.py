@@ -148,8 +148,7 @@ def page_provision_device():
 
 @app.route('/provisioning/assigned_devices')
 def page_assigned_devices():
-    assigned_devices = db.session.query(AssignedDevices)    
-    return render_template('assigned_devices.html', title = 'Assigned Devices', assigned_devices = [ txn.to_dict() for txn in assigned_devices ])
+    return render_template('assigned_devices.html', title = 'Assigned Devices')
 
 @app.route('/provisioning/return_device/<transaction_id>')
 def page_return_device(transaction_id):
