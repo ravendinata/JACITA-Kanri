@@ -170,6 +170,10 @@ def page_view_provisioned_device(transaction_id):
     
     return render_template('provisioning_view.html', title = 'View Transaction', transaction = transaction.to_dict())
 
+@app.route('/provisioning/view/history')
+def page_view_provisioned_device_history():
+    return render_template('provisioning_history.html', title = 'View Transaction History')
+
 @app.route('/provisioning_dashboard')
 def page_provisioning_dashboard():
     count_provisioned_device = db.session.query(func.count(Devices.status)).filter(Devices.status == 'Provisioned').scalar()
@@ -313,6 +317,11 @@ def get_devices():
 def list_provisioned_devices():
     assigned_devices = db.session.query(AssignedDevices)
     return { 'data': [ txn.to_dict() for txn in assigned_devices ] }
+
+@app.route('/api/provisioning/transactions', methods = ['GET'])
+def list_provisioning_transactions():
+    transactions = db.session.query(DeviceProvisioning)
+    return { 'data': [ txn.to_dict() for txn in transactions ] }
 
 @app.route('/api/provisioning/device/add', methods = ['POST'])
 def provision_device():

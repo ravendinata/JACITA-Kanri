@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<span class="float-end"><a class="btn btn-primary" href="/provision_device"><i class="fa-solid fa-stamp"></i> Checkout a Device</a></span>
+<h2>{{ title }}</h2>
+<hr>
+<div class="container-fluid" style="padding-bottom: 48px;">
+    <table id="data" class="table table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th style="text-align: left;">Transaction Date</th>
+                <th>Transaction Type</th>
+                <th>Previous Transaction</th>
+                <th>Transacted Device</th>
+                <th>Client</th>
+                <th>Self Transaction?</th>
+                <th>Officer</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function () 
+{
+    var tbl = $('#data').DataTable(
+    {
+        ajax: '/api/provisioning/transactions',
+        columns: 
+        [
+            { 
+                data: 'transaction_id',
+                searchBuilder: { orthogonal: 'export' },
+                render: function (data, type, row) 
+                {
+                    if (type === 'export')
+                        return data;
+
+                    return `${data}<br><a href="/provisioning/view/${data}" class="badge bg-secondary text-decoration-none"><i class="fa-regular fa-eye"></i> View Transaction</a>`;
+                }
+            },
+            { 
+                data: 'transaction_date',
+                type: 'moment-YYYY/MM/DD HH:mm:ss',
+                render: function (data, type, row) 
+                {
+                    return new Date(data).toLocaleString('ja-JP');
+                }
+            },
+            { 
+                data: 'transaction_type' 
+            },
+            {
+                data: 'prev_transaction_id',
+                searchBuilder: { orthogonal: 'export' },
+                render: function (data, type, row)
+                {
+                    if (type === 'export')
+                        return data;
+
+                    if (data === null)
+                        return '';
+
+                    return `${data}<br><a href="/provisioning/view/${data}" class="badge bg-secondary text-decoration-none"><i class="fa-regular fa-eye"></i> View Transaction</a>`;
+                }
+            },
+            { 
+                data: 'transacted_device',
+                render: function (data, type, row) 
+                {
+                    if (type === 'export')
+                        return data;
+
+                    if (type === 'searchPanes')
+                        return `<a href="/device/${data}">${data}</a>`;
+                    
+                    return `${data}<br><a href="/device/${data}" class="badge bg-secondary text-decoration-none"><i class="fa-regular fa-eye"></i> View Device</a>`;
+                }
+            },
+            { 
+                data: 'client_email' 
+            },
+            {
+                data: 'self_transaction',
+                render: function (data, type, row) { return data ? 'Yes' : 'No'; }
+            },
+            { 
+                data: 'officer_email'
+            }
+        ],
+        columnDefs: 
+        [
+            { targets: [1], className: 'dt-body-left' },
+            { target: 6, visible: false },
+            {
+                searchPanes: 
+                {
+                    show: true, 
+                    orthogonal: 'searchPanes'
+                },
+                targets: [2, 4, 5, 6, 7]
+            },
+            {
+                searchPanes: { show: false },
+                targets: [0, 1, 3]
+            },
+        ],
+        order: [[1, 'desc']],
+        fixedHeader: true,
+        language: 
+        {
+            searchBuilder: 
+            {
+                button: 
+                {
+                    0: 'Advanced Search',
+                    _: 'Advanced Search (%d)'
+                },
+                title:
+                {
+                    _: 'Advanced Search (%d)',
+                    0: 'Advanced Search'
+                },
+                data: 'Item'
+            }
+        },
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        layout: 
+        {
+            top3Start: 'info',
+            top3End: 'search',
+            top2Start: 'pageLength',
+            top2End: 
+            {
+                buttons: 
+                [
+                    {
+                        extend: 'colvis',
+                        text: 'Columns',
+                        columns: ':not(:first-child)'
+                    },
+                    {
+                        extend: 'collection',
+                        text: 'Export…',
+                        buttons:
+                        [
+                            {
+                                extend: 'excelHtml5',
+                                text: 'Excel',
+                                autoFilter: true,
+                                filename: `Kanri_Assigned_Devices_${new Date().toISOString().slice(0, 10)}`,
+                                messageBottom: `Exported on ${new Date().toISOString().slice(0, 10)}. Generated by JACITA Kanri.`,
+                                sheetName: 'Devices',
+                                exportOptions: 
+                                {
+                                    columns: [0, 1, 2, 3],
+                                    orthogonal: 'export'
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                text: 'PDF',
+                                filename: `Kanri_Assigned_Devices_${new Date().toISOString().slice(0, 10)}`,
+                                download: 'open',
+                                messageBottom: `Exported on ${new Date().toISOString().slice(0, 10)}. Generated by JACITA Kanri.`,
+                                pageSize: 'A4',
+                                orientation: 'landscape',
+                                exportOptions: 
+                                {
+                                    columns: [0, 1, 2, 3],
+                                    orthogonal: 'export'
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        extend: 'searchBuilder',
+                        config: { columns: [0, 1, 3, 5, 7] }
+                    }                        
+                ]
+            },
+            top1:
+            {
+                searchPanes:
+                {
+                    show: true,
+                    initCollapsed: true,
+                    cascadePanes: true
+                }
+            },
+            bottomStart: null,
+            bottomEnd: 'paging',
+        }
+    });
+});
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+{% endblock %}
+
