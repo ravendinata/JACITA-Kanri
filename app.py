@@ -141,6 +141,16 @@ def page_assigned_devices():
     assigned_devices = db.session.query(AssignedDevices)    
     return render_template('assigned_devices.html', title = 'Assigned Devices', assigned_devices = [ txn.to_dict() for txn in assigned_devices ])
 
+@app.route('/provisioning/return_device/<transaction_id>')
+def page_return_device(transaction_id):
+    original_transaction = DeviceProvisioning.query.filter_by(transaction_id = transaction_id).first()
+
+    if request.args.get('status_code'):
+        status = get_status(request.args.get('status_code'))
+        return render_template('return_device.html', title = 'Return Device', status = status['status'], message = status['message'])
+    
+    return render_template('return_device.html', title = 'Return Device', transaction_id = generate_txn_id('DEV'), original_transaction = original_transaction.to_dict())
+
 @app.route('/provisioning/view/<transaction_id>')
 def page_view_provisioned_device(transaction_id):
     transaction = DeviceProvisioning.query.filter_by(transaction_id = transaction_id).first()
@@ -322,6 +332,36 @@ def provision_device():
     except Exception as e:
         print(f"ERROR/EX: {e}")
         return redirect(url_for('page_provision_device', status_code = "778500"))
+    
+    return redirect(url_for('page_provisioning_dashboard', status_code = "778200"))
+
+@app.route('/api/provisioning/device/return', methods = ['POST'])
+def return_device():
+    print(request.form)
+    transaction_id = request.form['transaction_id']
+    transacted_device = request.form['transacted_device']
+    client_email = request.form['client_email']
+    is_self_transaction = request.form['is_self_transaction']
+    officer_email = request.form['officer_email']
+    prev_transaction_id = request.form['checkout_transaction_id']
+
+    device_provisioning = DeviceProvisioning(transaction_id = transaction_id,
+                                             transaction_type = 'Return',
+                                             transacted_device = transacted_device,
+                                             client_email = client_email,
+                                             is_self_transaction = is_self_transaction,
+                                             officer_email = officer_email,
+                                             prev_transaction_id = prev_transaction_id)
+    
+    device = Devices.query.filter_by(serial_number = transacted_device).first()
+    device.status = None
+
+    try:
+        db.session.add(device_provisioning)
+        db.session.commit()
+    except Exception as e:
+        print(f"ERROR/EX: {e}")
+        return redirect(url_for('page_return_device', transaction_id = prev_transaction_id, status_code = "778500"))
     
     return redirect(url_for('page_provisioning_dashboard', status_code = "778200"))
 
