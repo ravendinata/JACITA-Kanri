@@ -58,6 +58,7 @@ class DeviceProvisioning(db.Model):
     transaction_type = db.Column(db.String(45))
     transaction_date = db.Column(db.DateTime, server_default = func.now())
     transacted_device = db.Column(db.String(15), db.ForeignKey('devices.serial_number'))
+    status = db.Column(db.String(45))
     client_email = db.Column(db.String(100))
     is_self_transaction = db.Column(db.Integer)
     officer_email = db.Column(db.String(100))
@@ -340,6 +341,7 @@ def provision_device():
     device_provisioning = DeviceProvisioning(transaction_id = transaction_id,
                                              transaction_type = transaction_type,
                                              transacted_device = transacted_device,
+                                             status = 'Active',
                                              client_email = client_email,
                                              is_self_transaction = is_self_transaction,
                                              officer_email = officer_email)
@@ -364,6 +366,9 @@ def return_device():
     is_self_transaction = request.form['is_self_transaction']
     officer_email = request.form['officer_email']
     prev_transaction_id = request.form['checkout_transaction_id']
+
+    checkout_transaction = DeviceProvisioning.query.filter_by(transaction_id = prev_transaction_id).first()
+    checkout_transaction.status = 'Closed'
 
     device_provisioning = DeviceProvisioning(transaction_id = transaction_id,
                                              transaction_type = 'Return',
