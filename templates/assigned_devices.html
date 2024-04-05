@@ -9,9 +9,10 @@
         <thead>
             <tr>
                 <th>Transaction ID</th>
-                <th>Transaction Date</th>
+                <th style="text-align: left;">Checkout Date</th>
                 <th>Device Serial Number</th>
-                <th>Assignee</th>
+                <th>Assigned to</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +31,13 @@ $(document).ready(function ()
         columns: 
         [
             { data: 'transaction_id' },
-            { data: 'transaction_date' },
+            { 
+                data: 'transaction_date',
+                render: function (data, type, row) 
+                {
+                    return new Date(data).toLocaleString('ja-JP');
+                }
+            },
             { data: 'device_serial_number' },
             { data: 'assignee' },
             {
@@ -40,6 +47,10 @@ $(document).ready(function ()
                     return `<a href="/provisioning/view/${row.transaction_id}" class="btn btn-primary btn-sm"><i class="fa-regular fa-eye"></i> View</a>`;
                 }
             }
+        ],
+        columnDefs: 
+        [
+            { targets: [1], className: 'dt-body-left' }
         ],
         fixedHeader: true,
         language: 
