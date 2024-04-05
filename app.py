@@ -20,6 +20,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app, engine_options = { 'pool_recycle': 3600 })
 
+# ==============================
+# MODELS
+# ==============================
 class Devices(db.Model):
     date_added = db.Column(db.DateTime, server_default = func.now())
     serial_number = db.Column(db.String(15), primary_key = True)
@@ -78,10 +81,16 @@ class AssignedDevices(db.Model):
     def to_dict(self):
         return { c.name: getattr(self, c.name) for c in self.__table__.columns }
     
+# ==============================
+# METHODS
+# ==============================
+    
 def generate_txn_id(category: str):
     return f"{category}-{str(uuid.uuid4())[:16].upper()}"
 
-# Web Routes    
+# ==============================
+# WEB ROUTES
+# ==============================
 @app.route('/')
 def page_home():
     count_device = db.session.query(func.count(Devices.serial_number)).scalar()
@@ -179,7 +188,9 @@ def page_about():
 def page_login():
     return render_template('login.html', title = 'Login')
 
-# API Endpoints
+# ==============================
+# API ENDPOINTS
+# ==============================
 @app.route('/api/device/search', methods = ['GET'])
 def search_devices():
     serial_number = request.args.get('serial_number')
@@ -275,6 +286,7 @@ def edit_device():
     try:
         db.session.commit()
     except Exception as e:
+        print(f"ERROR/EX: {e}")
         return redirect(url_for('page_device', serial_number = serial_number, status_code = "338501"))
 
     return redirect(url_for('page_device', serial_number = request.form['serial_number'], status_code = "338201"))
@@ -300,7 +312,6 @@ def get_devices():
 @app.route('/api/provisioning/assigned_devices', methods = ['GET'])
 def list_provisioned_devices():
     assigned_devices = db.session.query(AssignedDevices)
-
     return { 'data': [ txn.to_dict() for txn in assigned_devices ] }
 
 @app.route('/api/provisioning/device/add', methods = ['POST'])
@@ -378,7 +389,9 @@ def login():
     else:
         return redirect(url_for('page_about'))
 
+# ==============================
 # Error handlers
+# ==============================
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', title = '404'), 404
