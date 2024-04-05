@@ -141,6 +141,15 @@ def page_assigned_devices():
     assigned_devices = db.session.query(AssignedDevices)    
     return render_template('assigned_devices.html', title = 'Assigned Devices', assigned_devices = [ txn.to_dict() for txn in assigned_devices ])
 
+@app.route('/provisioning/view/<transaction_id>')
+def page_view_provisioned_device(transaction_id):
+    transaction = DeviceProvisioning.query.filter_by(transaction_id = transaction_id).first()
+
+    if transaction is None:
+        return render_template('provisioning_view.html', title = 'View Transaction', transaction = None, error = "No device found with the specified serial number.")
+    
+    return render_template('provisioning_view.html', title = 'View Transaction', transaction = transaction.to_dict())
+
 @app.route('/provisioning_dashboard')
 def page_provisioning_dashboard():
     count_provisioned_device = db.session.query(func.count(Devices.status)).filter(Devices.status == 'Provisioned').scalar()

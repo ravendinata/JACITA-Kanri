@@ -32,7 +32,14 @@ $(document).ready(function ()
             { data: 'transaction_id' },
             { data: 'transaction_date' },
             { data: 'device_serial_number' },
-            { data: 'assignee' }
+            { data: 'assignee' },
+            {
+                data: null,
+                render: function (data, type, row) 
+                {
+                    return `<a href="/provisioning/view/${row.transaction_id}" class="btn btn-primary btn-sm"><i class="fa-regular fa-eye"></i> View</a>`;
+                }
+            }
         ],
         fixedHeader: true,
         language: 

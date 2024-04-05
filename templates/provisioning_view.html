@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid" style="padding-bottom: 48px;">
+    <span class="float-end"><a class="btn btn-primary" href="/provisioning/return_device/{{ transaction.transaction_id }}"><i class="fa-solid fa-hand-holding-hand"></i> Return Device</a></span>
+    <span class="float-end"><a class="btn btn-secondary me-2" href="#" onclick="history.back()"><i class="fa-solid fa-caret-left"></i> Back</a></span>
+    <h2>{{ title }}</h2>
+    <hr>
+    <form id="provisioningForm" method="POST">
+        <div class="row">
+            <div class="col mb-3">
+                <label for="transaction_id" class="form-label">Transaction ID</label>
+                <input type="text" class="form-control" id="transaction_id" name="transaction_id" value="{{ transaction.transaction_id }}" readonly>
+            </div>
+            <div class="col mb-3">
+                <label for="transaction_date" class="form-label">Transaction Date</label>
+                <input type="text" class="form-control" id="transaction_date" name="transaction_date" value="{{ transaction.transaction_date }}" readonly>
+            </div>
+            <div class="col mb-3">
+                <label for="transaction_type" class="form-label">Transaction Type</label>
+                <input type="text" class="form-control" id="transaction_type" name="transaction_type" value="{{ transaction.transaction_type }}" readonly>
+            </div>
+            {% if transaction.transaction_type == 'Checkout' %}
+            <div class="col mb-3">
+                <label for="is_self_checkout" class="form-label">Self Checkout?</label>
+                <input type="text" class="form-control" id="is_self_checkout" name="is_self_checkout" value="{{ 'Yes' if transaction.is_self_transaction == 1 else 'No' }}" readonly>
+            </div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="device_serial_number" class="form-label">Device Serial Number</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="device_serial_number" name="device_serial_number" value="{{ transaction.transacted_device }}" readonly>
+                    <a class="btn btn-primary" href="/device/{{ transaction.transacted_device }}"><i class="fa-solid fa-eye"></i> View Device</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="client" class="form-label">Client</label>
+                <input type="text" class="form-control" id="client" name="client" value="{{ transaction.client_email }}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="officer" class="form-label">Officer</label>
+                {% if transaction.is_self_transaction == 1 %}
+                <input type="text" class="form-control" id="officer" name="officer" placeholder="Self Checkout" disabled>
+                {% else %}
+                <input type="text" class="form-control" id="officer" name="officer" value="{{ transaction.officer_email }}" readonly>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+    <div class="modal fade" id="returnDeviceModal" tabindex="-1" aria-labelledby="returnDeviceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="returnDeviceModalLabel">Return Device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to return this device?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Return Device</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
