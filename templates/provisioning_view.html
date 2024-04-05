@@ -2,8 +2,12 @@
 
 {% block content %}
 <div class="container-fluid" style="padding-bottom: 48px;">
+    {% if transaction.status == 'Active' %}
     <span class="float-end"><a class="btn btn-primary" href="/provisioning/return_device/{{ transaction.transaction_id }}"><i class="fa-solid fa-hand-holding-hand"></i> Return Device</a></span>
     <span class="float-end"><a class="btn btn-secondary me-2" href="#" onclick="history.back()"><i class="fa-solid fa-caret-left"></i> Back</a></span>
+    {% else %}
+    <span class="float-end"><a class="btn btn-secondary" href="#" onclick="history.back()"><i class="fa-solid fa-caret-left"></i> Back</a></span>
+    {% endif %}
     <h2>{{ title }}</h2>
     <hr>
     <form id="provisioningForm" method="POST">
@@ -26,6 +30,10 @@
                 <input type="text" class="form-control" id="is_self_checkout" name="is_self_checkout" value="{{ 'Yes' if transaction.is_self_transaction == 1 else 'No' }}" readonly>
             </div>
             {% endif %}
+            <div class="col mb-3">
+                <label for="transaction_status" class="form-label">Transaction Status</label>
+                <input type="text" class="form-control" id="transaction_status" name="transaction_status" value="{{ transaction.status }}" readonly>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
@@ -69,4 +77,14 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+
+<script>
+    // Set the date format for the transaction date
+    $('#transaction_date').val(moment.utc('{{ transaction.transaction_date }}').local().format('YYYY-MM-DD HH:mm:ss'));
+</script>
+
 {% endblock %}
