@@ -31,7 +31,7 @@
                 <span class="visually-hidden">More</span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="moreButtonGroup">
-                <li><a class="dropdown-item" href="/provisioning/view/{{ device.serial_number }}"><i class="fa-solid fa-clipboard-user"></i> View Provisioning History</a></li>
+                <li><a class="dropdown-item" href="/provisioning/view/history?deviceID={{ device.serial_number }}"><i class="fa-solid fa-clipboard-user"></i> View Provisioning History</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</h6></li>
                 <li><a class="dropdown-item link-danger" href="#" onclick="show_delete_modal()"><i class="fa-regular fa-trash-can"></i> Delete Device</a></li>

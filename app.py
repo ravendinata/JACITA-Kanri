@@ -171,9 +171,14 @@ def page_view_provisioned_device(transaction_id):
     
     return render_template('provisioning_view.html', title = 'View Transaction', transaction = transaction.to_dict())
 
-@app.route('/provisioning/view/history')
+@app.route('/provisioning/view/history', methods = ['GET'])
 def page_view_provisioned_device_history():
-    return render_template('provisioning_history.html', title = 'Transaction History/Log')
+    if request.args.get('deviceID'):
+        title = f"Transaction History/Log for Device ID: {request.args.get('deviceID')}"
+    else:
+        title = "All Transaction History/Log"
+
+    return render_template('provisioning_history.html', title = title)
 
 @app.route('/provisioning_dashboard')
 def page_provisioning_dashboard():

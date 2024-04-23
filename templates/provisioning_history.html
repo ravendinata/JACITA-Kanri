@@ -27,6 +27,8 @@
 
 {% block scripts %}
 <script>
+var urlParams = new URLSearchParams(window.location.search);
+
 $(document).ready(function () 
 {
     var tbl = $('#data').DataTable(
@@ -203,9 +205,21 @@ $(document).ready(function ()
             bottomEnd: 'paging',
         }
     });
+
+    /* Pre-input search */
+    if (urlParams.has('deviceID'))
+    {
+        tbl.search(urlParams.get('deviceID')).draw();
+        tbl.column(5).visible(false);
+
+        $('.dt-search').hide(); // Hide the search bar
+        tbl.context[0]._searchBuilder.c.columns = [0, 1, 3, 7]; // Hide transacted device from search builder
+        
+        tbl.searchPanes.rebuildPane();
+        tbl.searchBuilder.rebuild();
+    }
 });
 </script>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 {% endblock %}
-
