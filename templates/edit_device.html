@@ -120,7 +120,7 @@
             <div class="col mb-3">
                 <label for="physical_mem_type" class="form-label">Type</label>
                 <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" {% if edit %} value="{{ device.physical_mem_type }}" {% endif %} required>
-                <div class="form-text"><b>Include the type, speed, and whether it is slotted or soldered.</b><br>e.g. DDR4/2400/Slotted, DDR4L/3200/Soldered. </div>
+                <div class="form-text"><b>Include the type, speed, and whether it is slotted or soldered. If the speed is unknown, set it to 000.</b><br>e.g. DDR4/2400/Slotted, DDR4L/3200/Soldered, LPDDR5/000/Soldered</div>
                 <div class="invalid-feedback">Please provide a valid memory type. Check the format as mentioned above and try again.</div>
             </div>
             <div class="col mb-3">
@@ -342,7 +342,7 @@
 
         // Validate CPU
         var cpu = document.getElementById('cpu');
-        if (cpu.value.match(/^(Intel (Core|Pentium|Celeron)|AMD (Ryzen|Athlon|A-Series)|MediaTek (Dimensity|Helio)|Exynos [0-9]+|Qualcomm Snapdragon+|Apple A[0-9]+|ARM Cortex-[A-Za-z0-9-]+) [A-Za-z0-9- ]+$/))
+        if (cpu.value.match(/^(Intel (Atom|Core|Pentium|Celeron|Xeon)|AMD (Ryzen|Athlon|A-Series|Threadripper|EPYC)|MediaTek (Dimensity|Helio)|Samsung Exynos|Qualcomm Snapdragon+|Apple (A|M)+|ARM Cortex [A-Za-z0-9-]+)[A-Za-z0-9- ]+$/))
         {
             cpu.setCustomValidity('');
         }
@@ -354,7 +354,7 @@
 
         // Validate GPU
         var gpu = document.getElementById('gpu');
-        if (gpu.value == '' || gpu.value.match(/^(NVIDIA GeForce [A-Za-z0-9-]+|AMD Radeon [A-Za-z0-9-]+|Intel (UHD|Iris Xe|HD Graphics|Xe Graphics)|Apple M[0-9]+|Qualcomm Adreno+|ARM Mali-[A-Za-z0-9-]+|Mali-[A-Za-z0-9-]+) [A-Za-z0-9- ]+$/))
+        if (gpu.value == '' || gpu.value.match(/^(NVIDIA GeForce [A-Za-z0-9-]+|AMD Radeon [A-Za-z0-9-]+|Intel (Arc|(U)?HD Graphics|Iris Xe (Graphics|Max)?|Iris (Pro |Plus )?Graphics)|Apple M[0-9]+|Qualcomm Adreno+|ARM Mali-[A-Za-z0-9-]+|Mali-[A-Za-z0-9-]+) [A-Za-z0-9- ]+$/))
         {
             gpu.setCustomValidity('');
         }    
@@ -366,7 +366,7 @@
 
         // Validate memory type
         var physical_mem_type = document.getElementById('physical_mem_type');
-        if (physical_mem_type.value.match(/^(DDR[2-5]{1,2}[LS]?|LPDDR[3-5])\/\d{3,4}\/(Slotted|Soldered)$/))
+        if (physical_mem_type.value.match(/^(DDR[2-5]{1,2}[LS]?|LPDDR[3-5][X]?)\/\d{3,4}\/(Slotted|Soldered)$/))
         {
             physical_mem_type.setCustomValidity('');
         }
