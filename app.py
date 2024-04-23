@@ -380,7 +380,7 @@ def return_device():
                                              prev_transaction_id = prev_transaction_id)
     
     device = Devices.query.filter_by(serial_number = transacted_device).first()
-    device.status = None
+    device.status = "Unassigned"
 
     try:
         db.session.add(device_provisioning)
