@@ -44,13 +44,17 @@
     <form id="deviceForm" method="POST">
         <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md mb-3">
                 <label for="serial_number" class="form-label">Serial Number</label>
                 <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ device.serial_number }}" readonly>
             </div>
+            <div class="col-md mb-3">
+                <label for="entry_date" class="form-label">Entry Date</label>
+                <input type="text" class="form-control" id="entry_date" name="entry_date" value="" readonly>
+            </div>
             <div class="col mb-3">
                 <label for="purchase_date" class="form-label">Purchase Date</label>
-                <input type="date" class="form-control" id="purchase_date" name="purchase_date" value="{{ device.purchase_date }}" readonly>
+                <input type="text" class="form-control" id="purchase_date" name="purchase_date" value="" readonly>
             </div>
             <div class="col mb-3">
                 <label for="status" class="form-label">Status</label>
@@ -187,6 +191,8 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+
 <script>
     function show_delete_modal()
     {
@@ -199,6 +205,9 @@
         document.querySelector('form').setAttribute('action', '/api/device/delete');
         document.querySelector('form').submit();
     }
+
+    $('#entry_date').val(moment.utc('{{ device.date_added }}').local().format('YYYY/MM/DD HH:mm:ss'));
+    $('#purchase_date').val(moment.utc('{{ device.purchase_date }}').local().format('YYYY/MM/DD'));
 </script>
 {% if error %}
 <script>
