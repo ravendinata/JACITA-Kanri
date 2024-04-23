@@ -1,3 +1,6 @@
+const params = new URLSearchParams(window.location.search);
+const normalize = params.has('norm');
+
 // On ready
 $(document).ready(function ()
 {
@@ -8,7 +11,8 @@ $(document).ready(function ()
         document.documentElement.setAttribute('data-bs-theme','light')
     
     // Normalize the URL
-    window.history.replaceState({}, document.title, window.location.pathname);
+    if (normalize)
+        window.history.replaceState({}, document.title, window.location.pathname);
 
     // Fade out the alert if it exists
     $('#alert').fadeTo(5000, 500).slideUp(500, function ()

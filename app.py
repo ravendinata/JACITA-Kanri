@@ -251,9 +251,9 @@ def add_device():
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_device_add', status_code = "338500"))
+        return redirect(url_for('page_device_add', status_code = "338500", norm = True))
 
-    return redirect(url_for('page_device', serial_number = serial_number, status_code = "338200"))
+    return redirect(url_for('page_device', serial_number = serial_number, status_code = "338200", norm = True))
 
 @app.route('/api/device/edit', methods = ['POST'])
 def edit_device():
@@ -292,9 +292,9 @@ def edit_device():
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_device', serial_number = serial_number, status_code = "338501"))
+        return redirect(url_for('page_device', serial_number = serial_number, status_code = "338501", norm = True))
 
-    return redirect(url_for('page_device', serial_number = request.form['serial_number'], status_code = "338201"))
+    return redirect(url_for('page_device', serial_number = request.form['serial_number'], status_code = "338201", norm = True))
 
 @app.route('/api/device/delete', methods = ['POST'])
 def delete_device():
@@ -307,7 +307,7 @@ def delete_device():
     db.session.delete(device)
     db.session.commit()
 
-    return redirect(url_for('page_devices', status_code = "338202"))
+    return redirect(url_for('page_devices', status_code = "338202", norm = True))
 
 @app.route('/api/devices')
 def get_devices():
@@ -337,7 +337,7 @@ def provision_device():
     # Check if the device is already provisioned
     device = Devices.query.filter_by(serial_number = transacted_device).first()
     if device.status == 'Provisioned':
-        return redirect(url_for('page_provision_device', status_code = "778500PD"))
+        return redirect(url_for('page_provision_device', status_code = "778500PD", norm = True))
 
     device_provisioning = DeviceProvisioning(transaction_id = transaction_id,
                                              transaction_type = transaction_type,
@@ -354,9 +354,9 @@ def provision_device():
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_provision_device', status_code = "778500"))
+        return redirect(url_for('page_provision_device', status_code = "778500", norm = True))
     
-    return redirect(url_for('page_provisioning_dashboard', status_code = "778200"))
+    return redirect(url_for('page_provisioning_dashboard', status_code = "778200", norm = True))
 
 @app.route('/api/provisioning/device/return', methods = ['POST'])
 def return_device():
@@ -387,9 +387,9 @@ def return_device():
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_return_device', transaction_id = prev_transaction_id, status_code = "778500"))
+        return redirect(url_for('page_return_device', transaction_id = prev_transaction_id, status_code = "778500", norm = True))
     
-    return redirect(url_for('page_provisioning_dashboard', status_code = "778200"))
+    return redirect(url_for('page_provisioning_dashboard', status_code = "778200", norm = True))
 
 @app.route('/api/login', methods = ['POST'])
 def login():
