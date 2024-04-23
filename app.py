@@ -45,7 +45,7 @@ class Devices(db.Model):
     is_touchscreen = db.Column(db.Integer)
     wireless_mac = db.Column(db.String(17))
     ethernet_mac = db.Column(db.String(17))
-    status = db.Column(db.String(45))
+    status = db.Column(db.String(45), default = 'Unassigned')
 
     def __repr__(self):
         return f"<Device: {self.serial_number}>"
