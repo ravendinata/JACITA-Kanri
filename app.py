@@ -250,6 +250,9 @@ def add_device():
                      internal_display_type = internal_display_type, internal_display_size_inch = internal_display_size_inch, 
                      internal_display_resolution = internal_display_resolution, is_touchscreen = is_touchscreen, 
                      wireless_mac = wireless_mac, ethernet_mac = ethernet_mac)
+    
+    if Devices.query.filter_by(serial_number = serial_number).first() is not None:
+        return redirect(url_for('page_device_add', status_code = "338500E", norm = True))
 
     try:
         db.session.add(device)
@@ -308,6 +311,9 @@ def delete_device():
 
     if device is None:
         return redirect(url_for('page_device', serial_number = serial_number))
+    
+    if device.status == 'Provisioned':
+        return redirect(url_for('page_device', serial_number = serial_number, status_code = "338502PD", norm = True))
     
     db.session.delete(device)
     db.session.commit()

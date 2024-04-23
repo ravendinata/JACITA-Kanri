@@ -15,6 +15,10 @@
         "status": "exception",
         "message": "Error occurred while adding device to database."
     },
+    "338500E": {
+        "status": "exception",
+        "message": "Device already exists in database."
+    },
     "338501": {
         "status": "exception",
         "message": "Error occurred while modifying database."
@@ -22,6 +26,10 @@
     "338502": {
         "status": "exception",
         "message": "Error occurred while deleting device from database."
+    },
+    "338502PD": {
+        "status": "exception",
+        "message": "Device is currently provisioned. Cannot delete provisioned device."
     },
     "778200": {
         "status": "success",
