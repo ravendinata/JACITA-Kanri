@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<span class="float-end"><a class="btn btn-primary" href="/provision_device"><i class="fa-solid fa-stamp"></i> Checkout a Device</a></span>
+<span class="float-end" id="headerControls"><a class="btn btn-primary" href="/provision_device"><i class="fa-solid fa-stamp"></i> Checkout a Device</a></span>
 <h2>{{ title }}</h2>
 <hr>
 <div class="container-fluid" style="padding-bottom: 48px;">
@@ -140,9 +140,7 @@ $(document).ready(function ()
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         layout: 
         {
-            top3Start: 'info',
-            top3End: 'search',
-            top2Start: 'pageLength',
+            top2Start: 'info',
             top2End: 
             {
                 buttons: 
@@ -217,6 +215,8 @@ $(document).ready(function ()
         
         tbl.searchPanes.rebuildPane();
         tbl.searchBuilder.rebuild();
+
+        document.getElementById('headerControls').innerHTML = `<a class="btn btn-secondary ms-2" href="/provisioning/view/history"><i class="fa-solid fa-clock-rotate-left"></i> View All Transactions</a>`;
     }
 });
 </script>
