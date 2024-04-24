@@ -25,6 +25,7 @@ db = SQLAlchemy(app, engine_options = { 'pool_recycle': 3600 })
 # ==============================
 class Devices(db.Model):
     date_added = db.Column(db.DateTime, server_default = func.now())
+    date_modified = db.Column(db.DateTime, server_default = func.now(), onupdate = func.now())
     serial_number = db.Column(db.String(15), primary_key = True)
     brand = db.Column(db.String(75))
     model = db.Column(db.String(100))
