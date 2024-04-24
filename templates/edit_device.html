@@ -120,7 +120,7 @@
             <div class="col mb-3">
                 <label for="physical_mem_type" class="form-label">Type</label>
                 <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" {% if edit %} value="{{ device.physical_mem_type }}" {% endif %} required>
-                <div class="form-text"><b>Include the type, speed, and whether it is slotted or soldered. If the speed is unknown, set it to 000.</b><br>e.g. DDR4/2400/Slotted, DDR4L/3200/Soldered, LPDDR5/000/Soldered</div>
+                <div class="form-text"><b>Include the type, speed, and whether it is slotted, soldered, or hybrid. If the speed is unknown, set it to 000.</b><br>e.g. DDR4/2400/Slotted, DDR4L/3200/Soldered, LPDDR5/000/Soldered</div>
                 <div class="invalid-feedback">Please provide a valid memory type. Check the format as mentioned above and try again.</div>
             </div>
             <div class="col mb-3">
