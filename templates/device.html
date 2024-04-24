@@ -31,7 +31,7 @@
                 <span class="visually-hidden">More</span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="moreButtonGroup">
-                <li><a class="dropdown-item" href="/provisioning/view/history?deviceID={{ device.serial_number }}"><i class="fa-solid fa-clipboard-user"></i> View Provisioning History</a></li>
+                <li><a class="dropdown-item" href="/provisioning/view/history?deviceID={{ device.serial_number }}"><i class="fa-solid fa-timeline"></i> View Provisioning History</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</h6></li>
                 <li><a class="dropdown-item link-danger" href="#" onclick="show_delete_modal()"><i class="fa-regular fa-trash-can"></i> Delete Device</a></li>
@@ -39,134 +39,148 @@
         </div>
         <button type="button" class="btn btn-secondary float-end me-2" onclick="history.back()"><i class="fa-solid fa-caret-left"></i> Back</button>
     </span>
-    <h2>Device Information</h2>
-    <hr>
-    <form id="deviceForm" method="POST">
-        <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
-        <div class="row">
-            <div class="col-md mb-3">
-                <label for="serial_number" class="form-label">Serial Number</label>
-                <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ device.serial_number }}" readonly>
-            </div>
-            <div class="col-md mb-3">
-                <label for="entry_date" class="form-label">Entry Date</label>
-                <input type="text" class="form-control" id="entry_date" name="entry_date" value="" readonly>
-            </div>
-            <div class="col mb-3">
-                <label for="purchase_date" class="form-label">Purchase Date</label>
-                <input type="text" class="form-control" id="purchase_date" name="purchase_date" value="" readonly>
-            </div>
-            <div class="col mb-3">
-                <label for="status" class="form-label">Status</label>
-                <input type="text" class="form-control" id="status" name="status" value="{{ device.status }}" readonly>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col mb-3">
-                <label for="type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="type" name="type" value="{{ device.type }}" readonly>
-            </div>
-            <div class="col mb-3">
-                <label for="brand" class="form-label">Brand</label>
-                <input type="text" class="form-control" id="brand" name="brand" value="{{ device.brand }}" readonly>
-            </div>
-            <div class="col mb-3">
-                <label for="model" class="form-label">Model</label>
-                <input type="text" class="form-control" id="model" name="model" value="{{ device.model }}" readonly>
-            </div>
-            <div class="col mb-3">
-                <label for="operating_system" class="form-label">Operating System</label>
-                <input type="text" class="form-control" id="operating_system" name="operating_system" value="{{ device.operating_system }}" readonly>
-            </div>
-        </div>
+    <div id="table">
+        <h2>Device Information</h2>
         <hr>
-        <h3>Hardware Information</h3>
-        <h5>Processor</h5>
-        <div class="row">
-            <div class="col mb-3">
-                <label for="cpu" class="form-label">CPU</label>
-                <input type="text" class="form-control" id="cpu" name="cpu" value="{{ device.cpu }}" readonly>
-            </div>
-            <div class="col mb-3">
-                <label for="gpu" class="form-label">GPU</label>
-                <input type="text" class="form-control" id="gpu" name="gpu" value="{{ device.gpu }}" readonly>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <h5>Memory</h5>
-            </div>
-            <div class="col-md-6">
-                <h5>Storage</h5>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 mb-3">
-                <label for="physical_mem_type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" value="{{ device.physical_mem_type }}" readonly>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="physical_mem_size_gb" class="form-label">Size</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="physical_mem_size_gb" name="physical_mem_size_gb" style="text-align: right;" value="{{ device.physical_mem_size_gb }}" readonly>
-                    <span class="input-group-text">GB</span>
+        <form id="deviceForm" method="POST">
+            <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
+            <div class="row">
+                <div class="col-md mb-3">
+                    <label for="serial_number" class="form-label">Serial Number</label>
+                    <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ device.serial_number }}" readonly>
+                </div>
+                <div class="col-md mb-3">
+                    <label for="entry_date" class="form-label">Entry Date</label>
+                    <input type="text" class="form-control" id="entry_date" name="entry_date" value="" readonly>
+                </div>
+                <div class="col-md mb-3">
+                    <label for="modify_date" class="form-label">Last Modified</label>
+                    <input type="text" class="form-control" id="modify_date" name="modify_date" value="" readonly>
+                </div>
+                <div class="col mb-3">
+                    <label for="purchase_date" class="form-label">Purchase Date</label>
+                    <input type="text" class="form-control" id="purchase_date" name="purchase_date" value="" readonly>
+                </div>
+                <div class="col mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <input type="text" class="form-control" id="status" name="status" value="{{ device.status }}" readonly>
                 </div>
             </div>
-            <div class="col-md-1 mb-3">
-                <label for="physical_mem_slots" class="form-label">Slots</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="physical_mem_slots_used" name="physical_mem_slots_used"style="text-align: center;" value="{{ device.physical_mem_slots_used }}" readonly>
-                    <input type="text" class="form-control" id="physical_mem_slots" name="physical_mem_slots" style="text-align: center;" value="{{ device.physical_mem_slots }}" readonly>
+            <div class="row">
+                <div class="col mb-3">
+                    <label for="type" class="form-label">Type</label>
+                    <input type="text" class="form-control" id="type" name="type" value="{{ device.type }}" readonly>
+                </div>
+                <div class="col mb-3">
+                    <label for="brand" class="form-label">Brand</label>
+                    <input type="text" class="form-control" id="brand" name="brand" value="{{ device.brand }}" readonly>
+                </div>
+                <div class="col mb-3">
+                    <label for="model" class="form-label">Model</label>
+                    <input type="text" class="form-control" id="model" name="model" value="{{ device.model }}" readonly>
+                </div>
+                <div class="col mb-3">
+                    <label for="operating_system" class="form-label">Operating System</label>
+                    <input type="text" class="form-control" id="operating_system" name="operating_system" value="{{ device.operating_system }}" readonly>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <label for="storage_type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="storage_type" name="storage_type" value="{{ device.storage_type }}" readonly>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="storage_size_gb" class="form-label">Size</label>
-                <div class="input-group">
-                    <input type="text" class="form-control " id="storage_size_gb" style="text-align: right;" name="storage_size_gb" value="{{ device.storage_size_gb }}" readonly>
-                    <span class="input-group-text">GB</span>
+            <hr>
+            <h3>Hardware Information</h3>
+            <h5>Processor</h5>
+            <div class="row">
+                <div class="col mb-3">
+                    <label for="cpu" class="form-label">CPU</label>
+                    <input type="text" class="form-control" id="cpu" name="cpu" value="{{ device.cpu }}" readonly>
+                </div>
+                <div class="col mb-3">
+                    <label for="gpu" class="form-label">GPU</label>
+                    <input type="text" class="form-control" id="gpu" name="gpu" value="{{ device.gpu }}" readonly>
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Memory</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5>Storage</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="physical_mem_type" class="form-label">Type / Speed / Installation</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" value="{{ device.physical_mem_type.split('/')[0] }}" readonly>
+                        <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" style="text-align: right;" value="{{ device.physical_mem_type.split('/')[1] }} MT/s" readonly>
+                        <input type="text" class="form-control" id="physical_mem_type" name="physical_mem_type" value="{{ device.physical_mem_type.split('/')[2] }}" readonly>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="physical_mem_size_gb" class="form-label">Size</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="physical_mem_size_gb" name="physical_mem_size_gb" style="text-align: right;" value="{{ device.physical_mem_size_gb }}" readonly>
+                        <span class="input-group-text">GB</span>
+                    </div>
+                </div>
+                <div class="col-md-1 mb-3">
+                    <label for="physical_mem_slots" class="form-label">Slots</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="physical_mem_slots_used" name="physical_mem_slots_used"style="text-align: center;" value="{{ device.physical_mem_slots_used }}" readonly>
+                        <input type="text" class="form-control" id="physical_mem_slots" name="physical_mem_slots" style="text-align: center;" value="{{ device.physical_mem_slots }}" readonly>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="storage_type" class="form-label">Form Factor</label>
+                    <input type="text" class="form-control" id="storage_type" name="storage_type" value="{{ device.storage_type.split('/')[0] }}" readonly>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="storage_interface" class="form-label">Interface</label>
+                    <input type="text" class="form-control" id="storage_interface" name="storage_interface" value="{{ device.storage_type.split('/')[1] }}" readonly>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="storage_size_gb" class="form-label">Size</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control " id="storage_size_gb" style="text-align: right;" name="storage_size_gb" value="{{ device.storage_size_gb }}" readonly>
+                        <span class="input-group-text">GB</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Display</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5>Network</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 mb-3">
+                    <label for="internal_display_type" class="form-label">Type</label>
+                    <input type="text" class="form-control" id="internal_display_type" name="internal_display_type" value="{{ device.internal_display_type }}" readonly>
+                </div>
+                <div class="col-md-1 mb-3">
+                    <label for="internal_display_size_inch" class="form-label">Size</label>
+                    <input type="text" class="form-control" id="internal_display_size_inch" name="internal_display_size_inch" value='{{ device.internal_display_size_inch }}"' readonly>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="internal_display_resolution" class="form-label">Resolution</label>
+                    <input type="text" class="form-control" id="internal_display_resolution" name="internal_display_resolution" value="{{ device.internal_display_resolution }}" readonly>
+                </div>
+                <div class="col-md-1 mb-3">
+                    <label for="is_touchscreen" class="form-label">Touch?</label>
+                    <input type="text" class="form-control" id="is_touchscreen" name="is_touchscreen" value="{{ 'Yes' if device.is_touchscreen else 'No' }}" readonly>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="wireless_mac" class="form-label">Wi-Fi MAC Address</label>
+                    <input type="text" class="form-control" id="wireless_mac" name="wireless_mac" value="{{ device.wireless_mac }}" readonly>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="ethernet_mac" class="form-label">Ethernet MAC Address</label>
+                    <input type="text" class="form-control" id="ethernet_mac" name="ethernet_mac" value="{{ device.ethernet_mac }}" readonly>
+                </div>
+            </div>
         <div class="row">
-            <div class="col-md-6">
-                <h5>Display</h5>
-            </div>
-            <div class="col-md-6">
-                <h5>Network</h5>
-            </div>
         </div>
-        <div class="row">
-            <div class="col-md-2 mb-3">
-                <label for="internal_display_type" class="form-label">Type</label>
-                <input type="text" class="form-control" id="internal_display_type" name="internal_display_type" value="{{ device.internal_display_type }}" readonly>
-            </div>
-            <div class="col-md-1 mb-3">
-                <label for="internal_display_size_inch" class="form-label">Size</label>
-                <input type="text" class="form-control" id="internal_display_size_inch" name="internal_display_size_inch" value='{{ device.internal_display_size_inch }}"' readonly>
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="internal_display_resolution" class="form-label">Resolution</label>
-                <input type="text" class="form-control" id="internal_display_resolution" name="internal_display_resolution" value="{{ device.internal_display_resolution }}" readonly>
-            </div>
-            <div class="col-md-1 mb-3">
-                <label for="is_touchscreen" class="form-label">Touch?</label>
-                <input type="text" class="form-control" id="is_touchscreen" name="is_touchscreen" value="{{ 'Yes' if device.is_touchscreen else 'No' }}" readonly>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="wireless_mac" class="form-label">Wi-Fi MAC Address</label>
-                <input type="text" class="form-control" id="wireless_mac" name="wireless_mac" value="{{ device.wireless_mac }}" readonly>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="ethernet_mac" class="form-label">Ethernet MAC Address</label>
-                <input type="text" class="form-control" id="ethernet_mac" name="ethernet_mac" value="{{ device.ethernet_mac }}" readonly>
-            </div>
-        </div>
-        <div class="row">
-        </div>
+    </div>
     </form>
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -192,6 +206,7 @@
 
 {% block scripts %}
 <script src="https://momentjs.com/downloads/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
     function show_delete_modal()
@@ -207,6 +222,7 @@
     }
 
     $('#entry_date').val(moment.utc('{{ device.date_added }}').local().format('YYYY/MM/DD HH:mm:ss'));
+    $('#modify_date').val(moment.utc('{{ device.date_modified }}').local().format('YYYY/MM/DD HH:mm:ss'));
     $('#purchase_date').val(moment.utc('{{ device.purchase_date }}').local().format('YYYY/MM/DD'));
 </script>
 {% if error %}
