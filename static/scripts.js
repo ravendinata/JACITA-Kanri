@@ -25,12 +25,12 @@ $(document).ready(function ()
 document.getElementById('btnToggleColorMode').addEventListener('click',()=>{
     if (document.documentElement.getAttribute('data-bs-theme') == 'dark')
     {
-        document.documentElement.setAttribute('data-bs-theme','light')
+        document.documentElement.setAttribute('data-bs-theme', 'light')
         setCookie('theme', 'light', 365)
     }
     else
     {
-        document.documentElement.setAttribute('data-bs-theme','dark')
+        document.documentElement.setAttribute('data-bs-theme', 'dark')
         setCookie('theme', 'dark', 365)
     }
 });
@@ -40,14 +40,14 @@ function setCookie(name, value, days)
 {
     var expires = "";
     
-    if (days) 
+    if(days) 
     {
         var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
 
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
 function getCookie(name) 
@@ -55,11 +55,11 @@ function getCookie(name)
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
 
-    for(var i=0;i < ca.length;i++) 
+    for(var i = 0; i < ca.length; i++) 
     {
         var c = ca[i];
 
-        while (c.charAt(0)==' ') 
+        while (c.charAt(0) == ' ') 
         {
             c = c.substring(1,c.length);
         }
