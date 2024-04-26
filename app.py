@@ -168,7 +168,7 @@ def page_view_provisioned_device(transaction_id):
     transaction = DeviceProvisioning.query.filter_by(transaction_id = transaction_id).first()
 
     if transaction is None:
-        return render_template('provisioning_view.html', title = 'View Transaction', transaction = None, error = "No device found with the specified serial number.")
+        return render_template('provisioning_view.html', title = 'View Transaction', transaction = None, error = "No transaction found with the specified transaction ID.")
     
     return render_template('provisioning_view.html', title = 'View Transaction', transaction = transaction.to_dict())
 

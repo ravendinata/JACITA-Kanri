@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
+</div>
+<div class="alert alert-light">
+    <h5>Search another transaction?</h5>
+    <form>
+        <input type="text" class="form-control mb-2" style="max-width: 50%;" name="search_txn_id">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+{% else %}
 <div class="container-fluid" style="padding-bottom: 48px;">
     {% if transaction.status == 'Active' %}
     <span class="float-end"><a class="btn btn-primary" href="/provisioning/return_device/{{ transaction.transaction_id }}"><i class="fa-solid fa-hand-holding-hand"></i> Return Device</a></span>
@@ -77,6 +89,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -86,5 +99,14 @@
     // Set the date format for the transaction date
     $('#transaction_date').val(moment.utc('{{ transaction.transaction_date }}').local().format('YYYY-MM-DD HH:mm:ss'));
 </script>
-
+{% if error %}
+<script>
+    document.querySelector('form').addEventListener("submit", function (e)
+    {
+        e.preventDefault();
+        let txn_id = document.querySelector('input[name="search_txn_id"]').value;
+        window.location.href = `/provisioning/view/${txn_id}`;
+    })
+</script>
+{% endif %}
 {% endblock %}
