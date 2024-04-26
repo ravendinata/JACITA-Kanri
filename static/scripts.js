@@ -6,9 +6,9 @@ $(document).ready(function ()
 {
     // Set the theme
     if (getCookie('theme') == 'dark')
-        document.documentElement.setAttribute('data-bs-theme','dark')
+        document.documentElement.setAttribute('data-bs-theme', 'dark')
     else
-        document.documentElement.setAttribute('data-bs-theme','light')
+        document.documentElement.setAttribute('data-bs-theme', 'light')
     
     // Normalize the URL
     if (normalize)
@@ -22,7 +22,8 @@ $(document).ready(function ()
 });
 
 // Toggle color mode
-document.getElementById('btnToggleColorMode').addEventListener('click',()=>{
+document.getElementById('btnToggleColorMode').addEventListener('click', () =>
+{
     if (document.documentElement.getAttribute('data-bs-theme') == 'dark')
     {
         document.documentElement.setAttribute('data-bs-theme', 'light')
@@ -60,14 +61,10 @@ function getCookie(name)
         var c = ca[i];
 
         while (c.charAt(0) == ' ') 
-        {
-            c = c.substring(1,c.length);
-        }
+            c = c.substring(1, c.length);
         
         if (c.indexOf(nameEQ) == 0) 
-        {
-            return c.substring(nameEQ.length,c.length);
-        }
+            return c.substring(nameEQ.length, c.length);
     }
 
     return null;
