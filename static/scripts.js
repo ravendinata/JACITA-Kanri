@@ -1,15 +1,15 @@
 const params = new URLSearchParams(window.location.search);
 const normalize = params.has('norm');
 
+// Set the theme
+if (getCookie('theme') == 'dark')
+document.documentElement.setAttribute('data-bs-theme', 'dark')
+else
+document.documentElement.setAttribute('data-bs-theme', 'light')
+
 // On ready
 $(document).ready(function ()
-{
-    // Set the theme
-    if (getCookie('theme') == 'dark')
-        document.documentElement.setAttribute('data-bs-theme', 'dark')
-    else
-        document.documentElement.setAttribute('data-bs-theme', 'light')
-    
+{    
     // Normalize the URL
     if (normalize)
         window.history.replaceState({}, document.title, window.location.pathname);
