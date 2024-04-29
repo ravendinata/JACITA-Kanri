@@ -78,6 +78,7 @@ $(document).ready(function ()
             },
             { 
                 data: 'transacted_device',
+                searchBuilder: { orthogonal: 'export' },
                 render: function (data, type, row) 
                 {
                     if (type === 'export')
