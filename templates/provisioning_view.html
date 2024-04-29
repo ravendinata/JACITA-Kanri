@@ -52,21 +52,27 @@
                 <label for="device_serial_number" class="form-label">Device Serial Number</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="device_serial_number" name="device_serial_number" value="{{ transaction.transacted_device }}" readonly>
-                    <a class="btn btn-primary" href="/device/{{ transaction.transacted_device }}"><i class="fa-solid fa-eye"></i> View Device</a>
+                    <a class="btn btn-primary col-3" href="/device/{{ transaction.transacted_device }}"><i class="fa-solid fa-eye"></i> View Device</a>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="client" class="form-label">Client</label>
-                <input type="text" class="form-control" id="client" name="client" value="{{ transaction.client_email }}" readonly>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="client" name="client" value="{{ transaction.client_email }}" readonly>
+                    <a class="btn btn-secondary col-3" href="mailto:{{ transaction.client_email }}"><i class="fa-solid fa-paper-plane"></i> Email Client</a>
+                </div>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="officer" class="form-label">Officer</label>
                 {% if transaction.is_self_transaction == 1 %}
                 <input type="text" class="form-control" id="officer" name="officer" placeholder="Self Checkout" disabled>
                 {% else %}
-                <input type="text" class="form-control" id="officer" name="officer" value="{{ transaction.officer_email }}" readonly>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="officer" name="officer" value="{{ transaction.officer_email }}" readonly>
+                    <a class="btn btn-secondary col-3" href="mailto:{{ transaction.officer_email }}"><i class="fa-solid fa-paper-plane"></i> Email Officer</a>
+                </div>
                 {% endif %}
             </div>
         </div>
