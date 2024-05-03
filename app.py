@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{db_username}:{db_password}@jacita-itam-jacita.a.aivencloud.com:23758/device-inventory?charset=utf8mb4'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app, engine_options = { 'pool_recycle': 3600 })
+db = SQLAlchemy(app, engine_options = { 'pool_recycle': 3600, 'pool_pre_ping': True })
 
 # ==============================
 # MODELS
