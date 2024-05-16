@@ -1,6 +1,7 @@
 import json
 import uuid
 
+import requests
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
@@ -115,14 +116,46 @@ def page_device_add():
 def page_device(serial_number):
     device = Devices.query.filter_by(serial_number = serial_number).first()
 
-    if request.args.get('status_code'):
-        status = get_status(request.args.get('status_code'))
-        return render_template('device.html', title = 'Device', device = device.to_dict(), status = status['status'], message = status['message'])
-
     if device is None:
         return render_template('device.html', title = 'Device', device = None, error = "No device found with the specified serial number.")
-    
-    return render_template('device.html', title = 'Device', device = device.to_dict())
+
+    wireless_mac = device.wireless_mac
+    ethernet_mac = device.ethernet_mac
+
+    wireless_mac_lookup = None
+    ethernet_mac_lookup = None
+
+    if wireless_mac != "":
+        wmac_response = requests.get(f"http://www.macvendorlookup.com/api/v2/{wireless_mac}")
+        if wmac_response.status_code == 200:
+            wireless_mac_lookup = json.loads(wmac_response.text)
+        
+    if ethernet_mac != "":
+        emac_response = requests.get(f"http://www.macvendorlookup.com/api/v2/{ethernet_mac}")
+        if emac_response.status_code == 200:
+            ethernet_mac_lookup = json.loads(emac_response.text)
+
+    assigned_client = "-"
+    if device.status == 'Provisioned':
+        assigned_client = DeviceProvisioning.query.filter_by(transacted_device = serial_number, status = "Active").first().client_email
+
+    if request.args.get('status_code'):
+        status = get_status(request.args.get('status_code'))
+        return render_template('device.html', 
+                               title = 'Device', 
+                               device = device.to_dict(), 
+                               status = status['status'], 
+                               message = status['message'],
+                               wmac_info = wireless_mac_lookup,
+                               emac_info = ethernet_mac_lookup,
+                               assigned_client = assigned_client)
+
+    return render_template('device.html', 
+                           title = 'Device', 
+                           device = device.to_dict(), 
+                           wmac_info = wireless_mac_lookup,
+                           emac_info = ethernet_mac_lookup,
+                           assigned_client = assigned_client)
 
 @app.route('/device/<serial_number>/edit')
 def page_device_edit(serial_number):
