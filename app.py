@@ -76,6 +76,8 @@ class AssignedDevices(db.Model):
     transaction_id = db.Column(db.String(20), primary_key = True)
     transaction_date = db.Column(db.DateTime)
     device_serial_number = db.Column(db.String(15), db.ForeignKey('devices.serial_number'))
+    device_wireless_mac = db.Column(db.String(17))
+    device_ethernet_mac = db.Column(db.String(17))
     assignee = db.Column(db.String(100))
 
     def __repr__(self):

@@ -12,6 +12,8 @@
                 <th style="text-align: left;">Checkout Date</th>
                 <th>Device Serial Number</th>
                 <th>Assigned to</th>
+                <th>Wireless MAC</th>
+                <th>Ethernet MAC</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -58,6 +60,8 @@ $(document).ready(function ()
                 }
             },
             { data: 'assignee' },
+            { data: 'device_wireless_mac' },
+            { data: 'device_ethernet_mac' },
             {
                 data: null,
                 render: function (data, type, row) 
@@ -68,7 +72,8 @@ $(document).ready(function ()
         ],
         columnDefs: 
         [
-            { targets: [1], className: 'dt-body-left' }
+            { targets: [1], className: 'dt-body-left' },
+            { targets: [1], visible: false }
         ],
         order: [[1, 'desc']],
         fixedHeader: true,
@@ -83,6 +88,11 @@ $(document).ready(function ()
             {
                 buttons: 
                 [
+                    {
+                        extend: 'colvis',
+                        text: 'Columns',
+                        columns: ':not(:first-child)'
+                    },
                     {
                         extend: 'collection',
                         text: 'Export…',
