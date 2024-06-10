@@ -40,13 +40,13 @@
         <button type="button" class="btn btn-secondary float-end me-2" onclick="history.back()"><i class="fa-solid fa-caret-left"></i> Back</button>
     </span>
     <div id="table">
-        <h2>Device Information</h2>
+        <h3>Device Information</h3>
         <hr>
         <form id="deviceForm" method="POST">
             <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
             <div class="row">
                 <div class="col-md mb-3">
-                    <label for="serial_number" class="form-label">Serial Number</label>
+                    <label for="serial_number" class="form-label"><i class="fa-solid fa-fingerprint"></i> Serial Number</label>
                     <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ device.serial_number }}" readonly>
                 </div>
                 <div class="col-md mb-3">
@@ -90,7 +90,7 @@
             </div>
             <hr>
             <h3>Hardware Information</h3>
-            <h5>Processor</h5>
+            <h5><i class="fa-solid fa-microchip"></i> Processor</h5>
             <div class="row">
                 <div class="col mb-3">
                     <label for="cpu" class="form-label">CPU</label>
@@ -103,10 +103,10 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h5>Memory</h5>
+                    <h5><i class="fa-solid fa-memory"></i> Memory</h5>
                 </div>
                 <div class="col-md-6">
-                    <h5>Storage</h5>
+                    <h5><i class="fa-solid fa-hard-drive"></i> Storage</h5>
                 </div>
             </div>
             <div class="row">
@@ -150,10 +150,10 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h5>Network</h5>
+                    <h5><i class="fa-solid fa-network-wired"></i> Network</h5>
                 </div>
                 <div class="col-md-6">
-                    <h5>Display</h5>
+                    <h5><i class="fa-solid fa-display"></i> Display</h5>
                 </div>
             </div>
             <div class="row">
