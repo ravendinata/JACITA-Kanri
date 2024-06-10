@@ -182,18 +182,20 @@
                     <input type="text" class="form-control" id="is_touchscreen" name="is_touchscreen" value="{{ 'Yes' if device.is_touchscreen else 'No' }}" readonly>
                 </div>
             </div>
-            {% if wmac_info != None %}
             <div class="row">
                 <div class="col-md-3 mb-3">
+                    {% if wmac_info != None %}
                     <label for="wireless_adapter_manufacturer" class="form-label">Wi-Fi Adapter Vendor</label>
                     <input type="text" class="form-control" id="wireless_adapter_manufacturer" name="wireless_adapter_manufacturer" value="{{ wmac_info[0].company }} [{{ wmac_info[0].country }}]" readonly>
+                    {% endif %}
                 </div>
                 <div class="col-md-3 mb-3">
+                    {% if emac_info != None %}
                     <label for="ethernet_adapter_manufacturer" class="form-label">Ethernet Adapter Vendor</label>
                     <input type="text" class="form-control" id="ethernet_adapter_manufacturer" name="ethernet_adapter_manufacturer" value="{{ emac_info[0].company }} [{{ emac_info[0].country }}]" readonly>
+                    {% endif %}
                 </div>
             </div>
-            {% endif %}
         <div class="row">
         </div>
     </div>
