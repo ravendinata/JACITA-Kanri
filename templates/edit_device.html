@@ -23,7 +23,7 @@
         {% endif %}
         <div class="row">
             <div class="col mb-3">
-                <label for="serial_number" class="form-label">Serial Number</label>
+                <label for="serial_number" class="form-label"><i class="fa-solid fa-fingerprint"></i> Serial Number</label>
                 <input type="text" class="form-control" id="serial_number" name="serial_number" {% if edit %} value="{{ device.serial_number }}" {% endif %} required>
                 <div class="form-text">
                     <b>The serial number of the device generated and assigned by the manufacturer.</b><br>
