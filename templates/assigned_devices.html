@@ -39,7 +39,7 @@ $(document).ready(function ()
                     if (type === 'export')
                         return data;
 
-                    return `${data} &nbsp <a href="/provisioning/view/${row.transaction_id}" class="badge bg-secondary text-decoration-none"><i class="fa-regular fa-eye"></i> View Transaction</a>`;
+                    return `${data} &nbsp <a href="/provisioning/view/${row.transaction_id}" class="badge bg-secondary text-decoration-none" style="float: right;"><i class="fa-regular fa-eye"></i> View Transaction</a>`;
                 }
             },
             { 
@@ -56,7 +56,7 @@ $(document).ready(function ()
                     if (type === 'export')
                         return data;
                     
-                    return `${data} &nbsp <a href="/device/${row.device_serial_number}" class="badge bg-secondary text-decoration-none"><i class="fa-regular fa-eye"></i> View Device</a>`;
+                    return `${data} &nbsp <a href="/device/${row.device_serial_number}" class="badge bg-secondary text-decoration-none" style="float: right;"><i class="fa-regular fa-eye"></i> View Device</a>`;
                 }
             },
             { data: 'assignee' },
