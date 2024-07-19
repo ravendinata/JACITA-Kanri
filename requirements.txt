@@ -6,10 +6,14 @@
 #
 blinker==1.7.0
     # via flask
+cffi==1.16.0
+    # via cryptography
 click==8.1.7
     # via flask
 colorama==0.4.6
     # via click
+cryptography==42.0.8
+    # via -r requirements.in
 flask==3.0.2
     # via
     #   -r requirements.in
@@ -26,6 +30,8 @@ markupsafe==2.1.5
     # via
     #   jinja2
     #   werkzeug
+pycparser==2.22
+    # via cffi
 pymysql==1.1.0
     # via -r requirements.in
 sqlalchemy==2.0.29
