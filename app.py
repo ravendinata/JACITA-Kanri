@@ -127,15 +127,19 @@ def page_device(serial_number):
     wireless_mac_lookup = None
     ethernet_mac_lookup = None
 
-    if wireless_mac != "":
-        wmac_response = requests.get(f"http://www.macvendorlookup.com/api/v2/{wireless_mac}")
-        if wmac_response.status_code == 200:
-            wireless_mac_lookup = json.loads(wmac_response.text)
+    try:
+        if wireless_mac != "":
+            wmac_response = requests.get(f"https://www.macvendorlookup.com/api/v2/{wireless_mac}", timeout = 30)
+            if wmac_response.status_code == 200:
+                wireless_mac_lookup = json.loads(wmac_response.text)
         
-    if ethernet_mac != "":
-        emac_response = requests.get(f"http://www.macvendorlookup.com/api/v2/{ethernet_mac}")
-        if emac_response.status_code == 200:
-            ethernet_mac_lookup = json.loads(emac_response.text)
+        if ethernet_mac != "":
+            emac_response = requests.get(f"https://www.macvendorlookup.com/api/v2/{ethernet_mac}", timeout = 30)
+            print(f"Response: {emac_response.text}")
+            if emac_response.status_code == 200:
+                ethernet_mac_lookup = json.loads(emac_response.text)
+    except Exception as e:
+        print(f"ERROR/EX: {e}")
 
     assigned_client = "-"
     if device.status == 'Provisioned':
