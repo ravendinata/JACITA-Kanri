@@ -162,7 +162,7 @@
     
         const form = event.target;
         const formData = new FormData(changeUsernameForm);
-        const newUsername = formData.get('newUsername');
+        const newUsername = formData.get('username_new');
 
         const response = await fetch(form.action, 
         {
@@ -184,6 +184,7 @@
 
         bsChangeUsernameDialog.hide();
         alert('Username changed successfully!');
+        window.location.href = "{{ url_for('main.page_radius_dashboard') }}";
     });
 
     // Change Password Form Handler
