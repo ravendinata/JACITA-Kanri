@@ -28,19 +28,16 @@
             <div class="collapse navbar-collapse" id="navbarNav" style="padding: 0 10px;">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/devices">Devices</a>
+                        <a class="nav-link" href="{{ url_for('main.page_devices') }}">Devices</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/provisioning_dashboard">Provisioning</a>
+                        <a class="nav-link" href="{{ url_for('main.page_provisioning') }}">Provisioning</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/locations">Locations</a>
+                        <a class="nav-link" href="{{ url_for('main.page_network') }}">Network</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/networks">Networks</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="{{ url_for('main.page_about') }}">About</a>
                     </li>
                 </ul>
                 <button class="btn btn-secondary float-end shadow" id="btnToggleColorMode"><i class="fa-solid fa-circle-half-stroke"></i></button>
