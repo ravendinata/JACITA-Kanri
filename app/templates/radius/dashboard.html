@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<hr>
+<h3>Hello <b>[Username]</b>!</h3>
+<br>
+<p><b>Account Management</b></p>
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card h-100">
+            <div class="card-body">
+                <a href="#" class="stretched-link"></a>
+                <p class="card-text"><i class="fa-solid fa-user-pen"></i> Edit Profile</p>
+            </div>
+        </div>
+    </div>
+    <div id="card-change-username" class="col-md-2">
+        <div class="card h-100">
+            <div class="card-body">
+                <a href="#" class="stretched-link"></a>
+                <p class="card-text"><i class="fa-solid fa-pen-to-square"></i> Change Username</p>
+            </div>
+        </div>
+    </div>
+    <div id="card-change-password" class="col-md-2">
+        <div class="card h-100">
+            <div class="card-body">
+                <a href="#" class="stretched-link"></a>
+                <p class="card-text"><i class="fa-solid fa-key"></i> Change Password</p>
+            </div>
+        </div>
+    </div>
+    <div id="card-logout" class="col-md-2">
+        <div class="card h-100">
+            <div class="card-body">
+                <a href="#" class="stretched-link"></a>
+                <p class="card-text"><i class="fa-solid fa-right-from-bracket"></i> Logout (RADIUS)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Username Dialog -->
+<div class="modal fade" id="changeUsernameDialog" tabindex="-1" aria-labelledby="changeUsernameDialogLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeUsernameDialogLabel">Change Username</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('api.api_radius_change_username') }}">
+                    <div class="mb-3">
+                        <label for="username_old" class="form-label">Old Username</label>
+                        <input type="text" class="form-control" id="username_old" name="username_old" value="" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username_new" class="form-label">New Username</label>
+                        <input type="text" class="form-control" id="username_new" name="username_new" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Change Username</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Dialog -->
+<div class="modal fade" id="changePasswordDialog" tabindex="-1" aria-labelledby="changePasswordDialogLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordDialogLabel">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('api.api_radius_change_password') }}">
+                    <input type="hidden" id="username" name="username" value="">
+                    <div class="mb-3">
+                        <label for="password_old" class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="password_old" name="password_old" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_new" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="password_new" name="password_new" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_confirm" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Hide the screen for a moment to prevent the user from seeing the original content
+    document.body.style.display = 'none';
+
+    // Check if the user has logged into RADIUS
+    if (getCookie('radius_username') === null) 
+    {
+        window.location.href = "{{ url_for('main.page_radius_login') }}";
+    }
+    else
+    {
+        // Show the screen again
+        document.body.style.display = 'block';
+    }
+
+    // Replace [Username] with the actual username stored in cookies
+    document.querySelector('h3').innerHTML = document.querySelector('h3').innerHTML.replace('[Username]', getCookie('radius_username'));
+
+    /* Bindings */
+    var changeUsernameForm = document.getElementById('changeUsernameDialog').querySelector('form');
+    var bsChangeUsernameDialog = new bootstrap.Modal(document.getElementById('changeUsernameDialog'), {
+        keyboard: false
+    });
+
+    var changePasswordForm = document.getElementById('changePasswordDialog').querySelector('form');
+    var bsChangePasswordDialog = new bootstrap.Modal(document.getElementById('changePasswordDialog'), {
+        keyboard: false
+    });
+
+    // Set current username in the forms
+    document.getElementById('username_old').value = getCookie('radius_username');
+    document.getElementById('username').value = getCookie('radius_username');
+
+    // Change Username Button
+    document.getElementById('card-change-username').addEventListener('click', function() 
+    {
+        bsChangeUsernameDialog.show();
+    });
+
+    // Change Password Button
+    document.getElementById('card-change-password').addEventListener('click', function() 
+    {
+        bsChangePasswordDialog.show();
+    });
+
+    // Logout from RADIUS Button
+    document.getElementById('card-logout').addEventListener('click', function() 
+    {
+        console.log('Logging out from RADIUS...');
+        removeCookie('radius_username');
+        window.location.href = "{{ url_for('main.page_radius_login') }}";
+    });
+
+    // Change Username Form Handler
+    changeUsernameForm.addEventListener('submit', async (event) =>
+    {
+        event.preventDefault();
+    
+        const form = event.target;
+        const formData = new FormData(changeUsernameForm);
+        const newUsername = formData.get('newUsername');
+
+        const response = await fetch(form.action, 
+        {
+            method: form.method,
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.status === "error") 
+        {
+            alert(data.message);
+            return;
+        }
+        else
+        {
+            setCookie('radius_username', newUsername, 1);
+        }
+
+        bsChangeUsernameDialog.hide();
+        alert('Username changed successfully!');
+    });
+
+    // Change Password Form Handler
+    changePasswordForm.addEventListener('submit', async (event) =>
+    {
+        event.preventDefault();
+    
+        const form = event.target;
+        const formData = new FormData(changePasswordForm);
+
+        print(formData);
+
+        const response = await fetch(form.action, 
+        {
+            method: form.method,
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.status === "error") 
+        {
+            alert(data.message);
+            return;
+        }
+
+        bsChangePasswordDialog.hide();
+        alert('Password changed successfully!');
+    });
+</script>
+{% endblock %}

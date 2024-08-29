@@ -193,6 +193,23 @@ def page_view_provisioned_device_history():
 
     return render_template('provisioning_history.html', title = title)
 
+# =========================
+# Network Management Routes
+# =========================
+
+@bp.route('/network')
+def page_network():
+    return render_template('network/dashboard.html', title = 'Network Dashboard')
+
+# RADIUS Subroutes
+@bp.route('/network/radius')
+def page_radius_dashboard():
+    return render_template('radius/dashboard.html', title = 'RADIUS Dashboard')
+
+@bp.route('/network/radius/login')
+def page_radius_login():
+    return render_template('radius/login.html', title = 'RADIUS Login')
+
 # ========================
 # Miscellaneous Web Routes
 # ========================

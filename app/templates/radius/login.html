@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<hr>
+<div class="login-page">
+    <h1>JACITA RADIUS</h1>
+    <p>
+        Please enter your RADIUS username and password to continue.<br>
+        <i>Note: Your RADIUS account is not your Kanri account.</i>
+    </p>
+    <form method="POST" action="{{ url_for('api.api_radius_authenticate')}}">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary float-end">Login</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Hide the screen for a moment to prevent the user from seeing the original content
+    document.body.style.display = 'none';
+
+    // Check if the user has logged into RADIUS
+    if (getCookie('radius_username') !== null) 
+    {
+        window.location.href = "{{ url_for('main.page_radius_dashboard') }}";
+    }
+    else
+    {
+        // Show the screen again
+        document.body.style.display = 'block';
+    }
+
+    // Send the form data to the server when the form is submitted
+    document.querySelector('form').addEventListener('submit', async (event) => 
+    {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const username = formData.get('username');
+
+        const response = await fetch(form.action, 
+        {
+            method: form.method,
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") 
+        {
+            // Store the username in cookies
+            setCookie('radius_username', username, 1);
+
+            // Redirect to the dashboard
+            window.location.href = "{{ url_for('main.page_radius_dashboard') }}";
+        } 
+        else 
+        {
+            alert(data.message);
+        }
+    });
+</script>
+{% endblock %}

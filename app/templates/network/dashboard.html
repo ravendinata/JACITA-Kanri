@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<hr>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h1 class="display-5"><i class="fa-solid fa-user-lock"></i></h1>
+                <h5 class="card-title">My RADIUS Profile</h5>
+                <p class="card-text">View and manage your RADIUS profile settings.</p>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('main.page_radius_dashboard') }}" class="btn btn-primary float-end">RADIUS Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
