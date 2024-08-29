@@ -12,6 +12,15 @@ def get_radius_connection():
         database = config['radius_db_name']
     )
 
+def change_username(username_old, username_new):
+    conn = get_radius_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE radcheck SET username = %s WHERE username = %s', (username_new, username_old))
+    cursor.execute('UPDATE userinfo SET username = %s WHERE username = %s', (username_new, username_old))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 def change_password(username, password):
     conn = get_radius_connection()
     cursor = conn.cursor()
