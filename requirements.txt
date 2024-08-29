@@ -30,6 +30,8 @@ markupsafe==2.1.5
     # via
     #   jinja2
     #   werkzeug
+mysql-connector-python==9.0.0
+    # via -r requirements.in
 pycparser==2.22
     # via cffi
 pymysql==1.1.0

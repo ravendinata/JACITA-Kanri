@@ -3,3 +3,4 @@ flask
 flask_sqlalchemy
 pymysql
 SQLAlchemy
+mysql-connector-python
