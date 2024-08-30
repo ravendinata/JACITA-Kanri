@@ -210,6 +210,10 @@ def page_radius_dashboard():
 def page_radius_login():
     return render_template('radius/login.html', title = 'RADIUS Login')
 
+@bp.route('/network/radius/edit_profile')
+def page_radius_edit_profile():
+    return render_template('radius/edit_profile.html', title = 'Edit RADIUS Profile')
+
 # ========================
 # Miscellaneous Web Routes
 # ========================

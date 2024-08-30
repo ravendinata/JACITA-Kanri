@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
+    <span><a href="{{ url_for('main.page_radius_dashboard') }}" class="btn btn-secondary float-end"><i class="fa-solid fa-caret-left"></i> Back to RADIUS Dashboard</a></span>
+    <h2>{{ title }}</h2>
+    <hr>
+    <form id="profile-form" method="post" action="{{ url_for('api.api_radius_update_profile') }}">
+        <input type="hidden" id="username" name="username" value="">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="firstname">First Name</label>
+                    <input type="text" class="form-control" id="firstname" name="firstname" value="" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="lastname">Last Name</label>
+                    <input type="text" class="form-control" id="lastname" name="lastname" value="" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="workphone">Work Phone</label>
+                    <input type="text" class="form-control" id="workphone" name="workphone" value="">
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" value="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <small>
+                    <br>
+                    <i>*) Please enter your password to verify your identity.</i>
+                </small>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Get username from cookie
+    const username = getCookie('radius_username');
+
+    $(document).ready(function() 
+    {
+        // Hide the screen for a moment to prevent the user from seeing the original content
+        document.body.style.display = 'none';
+
+        // Check if the user has logged into RADIUS
+        if (username === null) 
+        {
+            window.location.href = "{{ url_for('main.page_radius_login') }}";
+        }
+        else
+        {
+            document.body.style.display = 'block';
+            
+            $.ajax(
+            {
+                url: "{{ url_for('api.api_radius_get_profile') }}",
+                type: 'POST',
+                data: { username: username },
+                success: function(response) 
+                {
+                    if (response.status == 'success') 
+                    {
+                        $('#username').val(username);
+                        $('#firstname').val(response.profile.firstname);
+                        $('#lastname').val(response.profile.lastname);
+                        $('#email').val(response.profile.email);
+                        $('#workphone').val(response.profile.workphone);
+                    }
+                }
+            });
+        }
+    });
+
+    var form = document.getElementById('profile-form');
+    form.addEventListener('submit', async (event) =>
+    {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        const response = await fetch(form.action, 
+        {
+            method: form.method,
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.status == "error") 
+        {
+            alert(data.message);
+            return;
+        }
+        else
+        {
+            alert('Profile updated successfully!');
+            window.location.href = "{{ url_for('main.page_radius_dashboard') }}";
+        }
+    });
+</script>
+{% endblock %}
