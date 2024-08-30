@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<hr>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h1 class="display-5"><i class="fa-solid fa-diagram-project"></i></h1>
+                <h5 class="card-title">Client List</h5>
+                <p class="card-text">View clients connected to the network with integrated data.</p>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('main.page_omada_clients') }}" class="btn btn-primary float-end">Client List</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
