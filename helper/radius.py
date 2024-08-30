@@ -12,6 +12,8 @@ def get_radius_connection():
         database = config['radius_db_name']
     )
 
+# MANIPULATORS
+
 def change_username(username_old, username_new):
     conn = get_radius_connection()
     cursor = conn.cursor()
@@ -29,6 +31,16 @@ def change_password(username, password):
     cursor.close()
     conn.close()
 
+def update_profile(username, first_name, last_name, email, workphone):
+    conn = get_radius_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE userinfo SET firstname = %s, lastname = %s, email = %s, workphone = %s WHERE username = %s', (first_name, last_name, email, workphone, username))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+# GETTERS
+
 def get_password(username):
     conn = get_radius_connection()
     cursor = conn.cursor()
@@ -37,6 +49,24 @@ def get_password(username):
     cursor.close()
     conn.close()
     return result[0] if result else None
+
+def get_profile(username):
+    conn = get_radius_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT firstname, lastname, email, workphone FROM userinfo WHERE username = %s', (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    # JSONify the result
+    json = {
+        'firstname': result[0],
+        'lastname': result[1],
+        'email': result[2],
+        'workphone': result[3]
+    }
+
+    return json
 
 def check_user(username):
     conn = get_radius_connection()
