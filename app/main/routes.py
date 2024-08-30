@@ -201,6 +201,11 @@ def page_view_provisioned_device_history():
 def page_network():
     return render_template('network/dashboard.html', title = 'Network Dashboard')
 
+# Omada Subroutes
+@bp.route('/network/omada/clients')
+def page_omada_clients():
+    return render_template('omada/clients.html', title = 'Omada Clients')
+
 # RADIUS Subroutes
 @bp.route('/network/radius')
 def page_radius_dashboard():
