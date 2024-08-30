@@ -164,3 +164,4 @@ cython_debug/
 
 config.json
 test.py
+omada.cfg
