@@ -10,7 +10,7 @@
     <div class="col-md-2">
         <div class="card h-100">
             <div class="card-body">
-                <a href="#" class="stretched-link"></a>
+                <a href="{{ url_for('main.page_radius_edit_profile') }}" class="stretched-link"></a>
                 <p class="card-text"><i class="fa-solid fa-user-pen"></i> Edit Profile</p>
             </div>
         </div>
@@ -37,6 +37,36 @@
                 <a href="#" class="stretched-link"></a>
                 <p class="card-text"><i class="fa-solid fa-right-from-bracket"></i> Logout (RADIUS)</p>
             </div>
+        </div>
+    </div>
+</div>
+<hr>
+<p><b>Profile Information</b></p>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="firstname">First Name</label>
+            <input type="text" class="form-control" id="firstname" name="firstname" value="" readonly>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="lastname">Last Name</label>
+            <input type="text" class="form-control" id="lastname" name="lastname" value="" readonly>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="" readonly>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="workphone">Work Phone</label>
+            <input type="text" class="form-control" id="workphone" name="workphone" value="" readonly>
         </div>
     </div>
 </div>
@@ -103,23 +133,45 @@
 
 {% block scripts %}
 <script>
-    // Hide the screen for a moment to prevent the user from seeing the original content
-    document.body.style.display = 'none';
-
-    // Check if the user has logged into RADIUS
-    if (getCookie('radius_username') === null) 
+    $(document).ready(function() 
     {
-        window.location.href = "{{ url_for('main.page_radius_login') }}";
-    }
-    else
-    {
-        // Show the screen again
-        document.body.style.display = 'block';
-    }
+        const username = getCookie('radius_username');
+        
+        // Hide the screen for a moment to prevent the user from seeing the original content
+        document.body.style.display = 'none';
 
-    // Replace [Username] with the actual username stored in cookies
-    document.querySelector('h3').innerHTML = document.querySelector('h3').innerHTML.replace('[Username]', getCookie('radius_username'));
+        // Check if the user has logged into RADIUS
+        if (username === null) 
+        {
+            window.location.href = "{{ url_for('main.page_radius_login') }}";
+        }
+        else
+        {
+            // Show the screen again
+            document.body.style.display = 'block';
 
+            // Replace [Username] with the actual username stored in cookies
+            document.querySelector('h3').innerHTML = document.querySelector('h3').innerHTML.replace('[Username]', getCookie('radius_username'));
+
+            $.ajax(
+            {
+                url: "{{ url_for('api.api_radius_get_profile') }}",
+                type: 'POST',
+                data: { username: username },
+                success: function(response) 
+                {
+                    if (response.status == 'success') 
+                    {
+                        $('#firstname').val(response.profile.firstname);
+                        $('#lastname').val(response.profile.lastname);
+                        $('#email').val(response.profile.email);
+                        $('#workphone').val(response.profile.workphone);
+                    }
+                }
+            });
+        }
+    });
+    
     /* Bindings */
     var changeUsernameForm = document.getElementById('changeUsernameDialog').querySelector('form');
     var bsChangeUsernameDialog = new bootstrap.Modal(document.getElementById('changeUsernameDialog'), {
@@ -194,8 +246,6 @@
     
         const form = event.target;
         const formData = new FormData(changePasswordForm);
-
-        print(formData);
 
         const response = await fetch(form.action, 
         {
