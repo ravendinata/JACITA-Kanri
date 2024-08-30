@@ -26,17 +26,18 @@ def api_radius_change_username():
     username_new = request.form['username_new']
     password = request.form['password']
 
-    if radius.check_user(username_old):
-        if radius.get_password(username_old) == password:
-            if radius.check_user(username_new):
-                return { 'status': 'error', 'message': 'New username is already in use.' }
-
-            radius.change_username(username_old, username_new)
-            return { 'status': 'success', 'message': 'Username changed successfully.' }
-        
+    if not radius.check_user(username_old):
+        return { 'status': 'error', 'message': 'User not found.' }
+    
+    if not radius.get_password(username_old) == password:
         return { 'status': 'error', 'message': 'Authentication failed.' }
     
-    return { 'status': 'error', 'message': 'User not found.' }
+    if radius.check_user(username_new):
+        return { 'status': 'error', 'message': 'New username is already in use.' }
+    
+    radius.change_username(username_old, username_new)
+    return { 'status': 'success', 'message': 'Username changed successfully.' }    
+    
 
 @bp.route('/radius/change_password', methods = ['POST'])
 def api_radius_change_password():
