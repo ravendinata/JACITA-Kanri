@@ -20,6 +20,23 @@ def api_radius_authenticate():
     
     return { 'status': 'error', 'message': 'User not found.' }
 
+# GETTERS
+
+@bp.route('/radius/get_profile', methods = ['POST'])
+def api_radius_get_profile():
+    username = request.form['username']
+
+    try:
+        if radius.check_user(username):
+            return { 'status': 'success', 'message': 'Profile retrieved successfully.', 'profile': radius.get_profile(username) }
+        
+        return { 'status': 'error', 'message': 'User not found.' }
+    except:
+        return { 'status': 'error', 'message': 'An error occurred while retrieving the profile.' }
+    
+
+# MANIPULATORS
+
 @bp.route('/radius/change_username', methods = ['POST'])
 def api_radius_change_username():
     username_old = request.form['username_old']
@@ -62,3 +79,29 @@ def api_radius_change_password():
         return { 'status': 'success', 'message': 'Password changed successfully.' }
     
     return { 'status': 'error', 'message': 'User not found.' }
+
+@bp.route('/radius/update_profile', methods = ['POST'])
+def api_radius_update_profile():
+    username = request.form['username']
+    firstname = request.form['firstname']
+    lastname = request.form['lastname']
+    email = request.form['email']
+    workphone = request.form['workphone']
+    password = request.form['password']
+
+    print(request.form)
+
+    try:
+        if not radius.check_user(username):
+            return { 'status': 'error', 'message': 'User not found.' }
+        
+        if not password == radius.get_password(username):
+            return { 'status': 'error', 'message': 'Authentication failed.' }
+        
+        radius.update_profile(username, firstname, lastname, email, workphone)
+        return { 'status': 'success', 'message': 'Profile updated successfully.' }
+        
+    except Exception as e:
+        print(f"RADDB ERROR: {e}")
+        return { 'status': 'error', 'message': 'An error occurred while updating the profile.' }
+    
