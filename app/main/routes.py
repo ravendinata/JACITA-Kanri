@@ -233,4 +233,4 @@ def page_about():
 
 @bp.route('/login')
 def page_login():
-    return render_template('login.html', title = 'Login')
+    return render_template('auth/login.html', title = 'Login')

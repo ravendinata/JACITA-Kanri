@@ -1,0 +1,67 @@
+{% extends 'auth/base.html' %}
+
+{% block content %}
+<div class="login-page">
+    <h1>Login</h1>
+    <form method="POST" action="/api/auth/login">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Hide the screen for a moment to prevent the user from seeing the original content
+document.body.style.display = 'none';
+
+// Check if the user has logged into RADIUS
+if (getCookie('kanri_username') !== null) 
+{
+    window.location.href = "{{ url_for('main.index') }}";
+}
+else
+{
+    // Show the screen again
+    document.body.style.display = 'block';
+}
+
+// Send the form data to the server when the form is submitted
+document.querySelector('form').addEventListener('submit', async (event) => 
+{
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+    const username = formData.get('username');
+
+    const response = await fetch(form.action, 
+    {
+        method: form.method,
+        body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") 
+    {
+        // Store the username in cookies
+        setCookie('kanri_username', username, 1);
+
+        // Redirect to the home page
+        window.location.href = "{{ url_for('main.index') }}";
+    } 
+    else 
+    {
+        alert(data.message);
+    }
+});
+</script>
+{% endblock %}
