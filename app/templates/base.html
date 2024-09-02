@@ -49,6 +49,35 @@
     </div>
 
     <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script>
+    $(document).ready(function() 
+    {
+        // Hide the screen for a moment to prevent the user from seeing the original content
+        document.body.style.display = 'none';
+
+        // Check if the user has logged into Kanri
+        if (getCookie('kanri_username') === null) 
+        {
+            window.location.href = "{{ url_for('main.page_login') }}";
+        }
+        else
+        {
+            // Show the screen again
+            document.body.style.display = 'block';
+
+            // Set the username in the navbar
+            document.getElementById('navUsername').innerText = getCookie('kanri_username');
+        }
+
+        // Logout handler
+        document.getElementById('kanriLogout').addEventListener('click', function() 
+        {
+            console.log('Logging out from Kanri...');
+            removeCookie('kanri_username');
+            window.location.href = "{{ url_for('main.page_login') }}";
+        });
+    });
+    </script>
     {% block scripts %}{% endblock %}
   </body>
 </html>
