@@ -17,38 +17,43 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
     if columns is None:
         columns = ['ip', 'ssid', 'hostName', 'networkName', 'uptime']
 
-    clients = omada.getSiteClients()
-    assigned_devices = AssignedDevices.query.all()
+    try:
+        omada.login()
+        clients = omada.getSiteClients()
+        assigned_devices = AssignedDevices.query.all()
 
-    # Filter clients by SSID if specified
-    if filter_ssid:
-        clients = [client for client in clients if 'ssid' in client]
-        clients = [client for client in clients if filter_ssid in client['ssid']]
-    
-    # Add each client as a separate array item to the data array
-    data = []
-    for client in clients:
-        mac = client['mac'].replace('-', ':').lower()
-        client_data = { 'mac': mac }
+        # Filter clients by SSID if specified
+        if filter_ssid:
+            clients = [client for client in clients if 'ssid' in client]
+            clients = [client for client in clients if filter_ssid in client['ssid']]
+        
+        # Add each client as a separate array item to the data array
+        data = []
+        for client in clients:
+            mac = client['mac'].replace('-', ':').lower()
+            client_data = { 'mac': mac }
 
-        for column in columns:
-            if column in client:
-                client_data[column] = client[column]
-            else:
-                client_data[column] = None
+            for column in columns:
+                if column in client:
+                    client_data[column] = client[column]
+                else:
+                    client_data[column] = None
 
-        # Convert uptime to a human-readable format
-        if 'uptime' in client_data and format_uptime:
-            uptime = convert_seconds_to_human_readable(client_data['uptime'])
-            client_data['uptime'] = uptime
+            # Convert uptime to a human-readable format
+            if 'uptime' in client_data and format_uptime:
+                uptime = convert_seconds_to_human_readable(client_data['uptime'])
+                client_data['uptime'] = uptime
 
-        # Filter the pre-fetched assigned devices to find the device with the matching MAC address
-        assigned_device = next((device for device in assigned_devices if device.device_wireless_mac.lower() == mac or device.device_ethernet_mac.lower() == mac), 
-                               None)
+            # Filter the pre-fetched assigned devices to find the device with the matching MAC address
+            assigned_device = next((device for device in assigned_devices if device.device_wireless_mac.lower() == mac or device.device_ethernet_mac.lower() == mac), 
+                                None)
 
-        client_data['assignee'] = assigned_device.assignee if assigned_device else 'Unassigned'
+            client_data['assignee'] = assigned_device.assignee if assigned_device else 'Unassigned'
 
-        data.append(client_data)
+            data.append(client_data)
+    except Exception as e:
+        print(e)
+        data = []
 
     return data
 
@@ -63,7 +68,11 @@ def api_omada_clients():
     filter_ssid = params['filter.ssid'] if 'filter.ssid' in params else None
     format_uptime = params['format.uptime'] if 'format.uptime' in params else False
 
-    data = get_clients(columns = columns, filter_ssid = filter_ssid, format_uptime = format_uptime)
+    try:
+        data = get_clients(columns = columns, filter_ssid = filter_ssid, format_uptime = format_uptime)
+    except Exception as e:
+        data = { 'error': str(e) }
+
     return { 'data': data }
 
 @bp.route('/omada/clients/raw', methods = ['GET'])
