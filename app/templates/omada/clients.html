@@ -14,6 +14,7 @@
                 <th>Connected to (Wired)</th>
                 <th>Uptime</th>
                 <th>Assignee</th>
+                <th>Authenticated As</th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +38,8 @@ $(document).ready(function ()
             { data: 'ssid' }, // 3
             { data: 'networkName' }, // 4
             { data: 'uptime', searchable: false }, // 5
-            { data: 'assignee' } // 6
+            { data: 'assignee' }, // 6
+            { data: 'localUser'} // 7
         ],
         columnDefs: 
         [
