@@ -590,3 +590,11 @@ class Omada:
 	##
 	def getWirelessNetworks(self, group, site=None):
 		return self.__get( f'/sites/{self.__findKey(site)}/setting/wlans/{group}/ssids' )
+	
+	##
+	## Returns the list of authorized clients for the given site.
+	##
+	## This is the "Authorized Clients" list on the Hotspot Manager dashboard.
+	##
+	def getAuthorizedClients(self, site=None):
+		return self.__geterator( f'/hotspot/sites/{self.__findKey(site)}/clients', { 'currentPage': 1} )
