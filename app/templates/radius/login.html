@@ -36,6 +36,14 @@
     {
         // Show the screen again
         document.body.style.display = 'block';
+
+        // Get previous URL from params
+        const urlParams = new URLSearchParams(window.location.search);
+        const previousUrl = urlParams.get('previous');
+
+        // Set the history state to the URL sent by the previous page
+        if (previousUrl) 
+            window.history.replaceState({}, document.title, previousUrl);
     }
 
     // Send the form data to the server when the form is submitted

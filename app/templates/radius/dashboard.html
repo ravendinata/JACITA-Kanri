@@ -143,7 +143,9 @@
         // Check if the user has logged into RADIUS
         if (username === null) 
         {
-            window.location.href = "{{ url_for('main.page_radius_login') }}";
+            const previousUrl = document.referrer;
+            window.history.replaceState({}, document.title, previousUrl);
+            window.location.href = "{{ url_for('main.page_radius_login') }}?previous=" + previousUrl;
         }
         else
         {
