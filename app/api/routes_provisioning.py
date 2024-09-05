@@ -50,7 +50,7 @@ def api_transaction_add():
         print(f"ERROR/EX: {e}")
         return redirect(url_for('page_provision_device', status_code = "778500", norm = True))
     
-    return redirect(url_for('page_provisioning_dashboard', status_code = "778200", norm = True))
+    return redirect(url_for('page_provisioning', status_code = "778200", norm = True))
 
 @bp.route('/provisioning/device/return', methods = ['POST'])
 def api_transaction_return():
@@ -83,4 +83,4 @@ def api_transaction_return():
         print(f"ERROR/EX: {e}")
         return redirect(url_for('page_return_device', transaction_id = prev_transaction_id, status_code = "778500", norm = True))
     
-    return redirect(url_for('page_provisioning_dashboard', status_code = "778200", norm = True))
+    return redirect(url_for('page_provisioning', status_code = "778200", norm = True))
