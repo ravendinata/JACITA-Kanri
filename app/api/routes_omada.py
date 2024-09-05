@@ -85,6 +85,20 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
 # Omada API Routes
 # ================
 
+@bp.route('/omada/login_status', methods = ['GET'])
+def api_omada_login_status():
+    return { 'data': omada.getLoginStatus() }
+
+@bp.route('/omada/refresh_session', methods = ['GET'])
+def api_omada_refresh_session():
+    try:
+        omada.login()
+        data = { 'success': True }
+    except Exception as e:
+        data = { 'error': str(e) }
+
+    return { 'data': data }
+
 @bp.route('/omada/clients', methods = ['GET'])
 def api_omada_clients():
     params = request.args.to_dict()
