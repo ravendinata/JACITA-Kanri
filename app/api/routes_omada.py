@@ -1,3 +1,4 @@
+import json
 import time
 import urllib3
 
@@ -131,6 +132,27 @@ def api_omada_authorized_clients():
         data = { 'error': str(e) }
 
     return { 'data': data }
+
+@bp.route('/omada/settings/controller', methods = ['GET'])
+def api_omada_settings():
+    try:
+        settings = omada.getControllerSettings()
+        data = json.loads(json.dumps(settings))
+    except Exception as e:
+        data = { 'error': str(e) }
+
+    return { 'data': data }
+
+@bp.route('/omada/settings/site', methods = ['GET'])
+def api_omada_sites():
+    try:
+        settings = omada.getSiteSettings()
+        data = json.loads(json.dumps(settings))
+    except Exception as e:
+        data = { 'error': str(e) }
+
+    return { 'data': data }
+
 # Daemon to keep Omada API session alive
 def keep_omada_session_alive():
     while True:
