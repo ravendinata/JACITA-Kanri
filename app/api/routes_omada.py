@@ -34,7 +34,7 @@ def get_active_auth_clients():
 
 def get_clients(columns, filter_ssid = None, format_uptime = False):
     if columns is None:
-        columns = ['ip', 'ssid', 'hostName', 'networkName', 'uptime']
+        columns = ['ip', 'hostName', 'uptime']
 
     try:
         omada.login()
@@ -59,10 +59,34 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
                 else:
                     client_data[column] = None
 
+            # Connected to what network (WLAN or LAN)
+            if 'networkName' in client:
+                client_data['connectedTo'] = f"{client['networkName']} (Eth)"
+            elif 'ssid' in client:
+                client_data['connectedTo'] = f"{client['ssid']} (Wi-Fi)"
+            else:
+                client_data['connectedTo'] = 'Unknown'
+
+            # Connection port (which AP or switch port)
+            if 'apName' in client:
+                client_data['connectionPort'] = client['apName']
+            elif 'switchName' in client:
+                client_data['connectionPort'] = client['switchName']
+                if 'port' in client:
+                    client_data['connectionPort'] += f" (Port: {client['port']})"
+            else:
+                client_data['connectionPort'] = 'Unknown'
+
             # Convert uptime to a human-readable format
             if 'uptime' in client_data and format_uptime:
-                uptime = convert_seconds_to_human_readable(client_data['uptime'])
-                client_data['uptime'] = uptime
+                raw_uptime = client_data['uptime']
+                formatted_uptime = convert_seconds_to_human_readable(raw_uptime)
+                
+                # Assign a dictionary to client_data['uptime'] with both raw and formatted values
+                client_data['uptime'] = {
+                    'raw': raw_uptime,
+                    'formatted': formatted_uptime
+                }
 
             # Filter the pre-fetched assigned devices to find the device with the matching MAC address
             assigned_device = next((device for device in assigned_devices if device.device_wireless_mac.lower() == mac or device.device_ethernet_mac.lower() == mac), 
