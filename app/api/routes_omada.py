@@ -14,6 +14,23 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 omada = Omada("omada.cfg")
 omada.login()
 
+def get_active_auth_clients():
+    try:
+        omada.login()
+        clients = omada.getAuthorizedClients()
+        
+        active_clients = []
+        for client in clients:
+            active_clients.append(client)
+
+        for client in active_clients:
+            client['mac'] = client['mac'].replace('-', ':').lower()
+    except Exception as e:
+        print(e)
+        active_clients = []
+
+    return active_clients
+
 def get_clients(columns, filter_ssid = None, format_uptime = False):
     if columns is None:
         columns = ['ip', 'ssid', 'hostName', 'networkName', 'uptime']
@@ -22,6 +39,7 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
         omada.login()
         clients = omada.getSiteClients()
         assigned_devices = AssignedDevices.query.all()
+        authenticated_clients = get_active_auth_clients()
 
         # Filter clients by SSID if specified
         if filter_ssid:
@@ -48,8 +66,13 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
             # Filter the pre-fetched assigned devices to find the device with the matching MAC address
             assigned_device = next((device for device in assigned_devices if device.device_wireless_mac.lower() == mac or device.device_ethernet_mac.lower() == mac), 
                                 None)
+            
+            # Check if the client is an authenticated client
+            authenticated_client = next((client for client in authenticated_clients if client['mac'] == mac), None)
 
             client_data['assignee'] = assigned_device.assignee if assigned_device else 'Unassigned'
+            client_data['authenticated'] = authenticated_client is not None
+            client_data['localUser'] = authenticated_client['localUserName'] if authenticated_client else None
 
             data.append(client_data)
     except Exception as e:
@@ -84,6 +107,15 @@ def api_omada_clients_raw():
     for client in clients:
         data.append(client)
         
+    return { 'data': data }
+
+@bp.route('/omada/authorized_clients', methods = ['GET'])
+def api_omada_authorized_clients():
+    try:
+        data = get_active_auth_clients()
+    except Exception as e:
+        data = { 'error': str(e) }
+
     return { 'data': data }
 # Daemon to keep Omada API session alive
 def keep_omada_session_alive():
