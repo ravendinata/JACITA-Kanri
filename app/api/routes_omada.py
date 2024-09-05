@@ -1,3 +1,4 @@
+import time
 import urllib3
 
 from flask import request
@@ -84,3 +85,18 @@ def api_omada_clients_raw():
         data.append(client)
         
     return { 'data': data }
+# Daemon to keep Omada API session alive
+def keep_omada_session_alive():
+    while True:
+        omada.login()
+        print('Omada API session refreshed')
+
+        login_status = omada.getLoginStatus()
+        print(login_status)
+
+        time.sleep(1800)
+
+# Start the daemon
+import threading
+thread = threading.Thread(target = keep_omada_session_alive)
+thread.start()
