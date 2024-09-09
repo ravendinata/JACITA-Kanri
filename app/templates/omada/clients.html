@@ -21,10 +21,35 @@
         </tbody>
     </table>
 </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="refreshToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+        <div class="toast-header">
+            <strong class="me-auto"><span id="toastTitle"></span></strong>
+            <small id="toastTime"></small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+const toast = new bootstrap.Toast(document.getElementById('refreshToast'));
+
+function displayToast(title, message) 
+{
+    var time = new Date().toLocaleTimeString();
+
+    document.getElementById('toastTitle').textContent = title
+    document.getElementById('toastTime').textContent = time;
+    document.getElementById('toastMessage').textContent = message;
+
+    toast.show();
+}
+
 $(document).ready(function () 
 {
     var tbl = $('#data').DataTable(
@@ -139,9 +164,25 @@ $(document).ready(function ()
                     },
                     {
                         text: 'Refresh',
+                        attr:  { id: 'btnRefresh' },
                         action: function (e, dt, node, config) 
                         {
-                            dt.ajax.reload();
+                            const btnRefresh = document.getElementById('btnRefresh');
+                            btnRefresh.disabled = true;
+                            btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Refreshing...';
+
+                            displayToast('Data Refresh', 'Refreshing data from the server...');
+                            dt.searchPanes.clearSelections();
+                            
+                            dt.ajax.reload(function() 
+                            {
+                                setTimeout(() => dt.searchPanes.rebuildPane(), 2000);
+
+                                btnRefresh.disabled = false;
+                                btnRefresh.innerHTML = 'Refresh';
+
+                                displayToast('Data Refresh', 'Data refreshed successfully.');
+                            });
                         }
                     }              
                 ]
