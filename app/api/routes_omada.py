@@ -22,7 +22,8 @@ def get_active_auth_clients():
         
         active_clients = []
         for client in clients:
-            active_clients.append(client)
+            if client['valid'] == True:
+                active_clients.append(client)
 
         for client in active_clients:
             client['mac'] = client['mac'].replace('-', ':').lower()
@@ -58,6 +59,10 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
                     client_data[column] = client[column]
                 else:
                     client_data[column] = None
+
+            # If the client does not have a hostname, use the client's name instead
+            if 'name' in client and 'hostName' in client_data and client_data['hostName'] is None:
+                client_data['hostName'] = client['name']
 
             # Connected to what network (WLAN or LAN)
             if 'networkName' in client:
@@ -101,7 +106,7 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
             if authenticated_client:
                 client_data['localUser'] = authenticated_client['localUserName'] if 'localUserName' in authenticated_client else None
             else:
-                client_data['localUser'] = client['dot1xUserName'] if 'dot1xUserName' in client else None
+                client_data['localUser'] = client['dot1xIdentity'] if 'dot1xIdentity' in client else None
 
             data.append(client_data)
     except Exception as e:
