@@ -59,16 +59,16 @@ def api_device_add():
                      wireless_mac = wireless_mac, ethernet_mac = ethernet_mac)
     
     if Devices.query.filter_by(serial_number = serial_number).first() is not None:
-        return redirect(url_for('page_device_add', status_code = "338500E", norm = True))
+        return redirect(url_for('main.page_device_add', status_code = "338500E", norm = True))
 
     try:
         db.session.add(device)
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_device_add', status_code = "338500", norm = True))
+        return redirect(url_for('main.page_device_add', status_code = "338500", norm = True))
 
-    return redirect(url_for('page_device', serial_number = serial_number, status_code = "338200", norm = True))
+    return redirect(url_for('main.page_device', serial_number = serial_number, status_code = "338200", norm = True))
 
 @bp.route('/device/edit', methods = ['POST'])
 def api_device_edit():
@@ -78,7 +78,7 @@ def api_device_edit():
     device = Devices.query.filter_by(serial_number = serial_number).first()
 
     if device is None:
-        return redirect(url_for('page_device', serial_number = serial_number))
+        return redirect(url_for('main.page_device', serial_number = serial_number))
     
     device.serial_number = request.form['serial_number']
     device.brand = request.form['brand']
@@ -107,9 +107,9 @@ def api_device_edit():
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_device', serial_number = serial_number, status_code = "338501", norm = True))
+        return redirect(url_for('main.page_device', serial_number = serial_number, status_code = "338501", norm = True))
 
-    return redirect(url_for('page_device', serial_number = request.form['serial_number'], status_code = "338201", norm = True))
+    return redirect(url_for('main.page_device', serial_number = request.form['serial_number'], status_code = "338201", norm = True))
 
 @bp.route('/device/delete', methods = ['POST'])
 def api_device_delete():
@@ -117,15 +117,15 @@ def api_device_delete():
     device = Devices.query.filter_by(serial_number = serial_number).first()
 
     if device is None:
-        return redirect(url_for('page_device', serial_number = serial_number))
+        return redirect(url_for('main.page_device', serial_number = serial_number))
     
     if device.status == 'Provisioned':
-        return redirect(url_for('page_device', serial_number = serial_number, status_code = "338502PD", norm = True))
+        return redirect(url_for('main.page_device', serial_number = serial_number, status_code = "338502PD", norm = True))
     
     db.session.delete(device)
     db.session.commit()
 
-    return redirect(url_for('page_devices', status_code = "338202", norm = True))
+    return redirect(url_for('main.page_devices', status_code = "338202", norm = True))
 
 @bp.route('/devices')
 def api_devices_get():

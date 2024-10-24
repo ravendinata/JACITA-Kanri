@@ -31,7 +31,7 @@ def api_transaction_add():
     # Check if the device is already provisioned
     device = Devices.query.filter_by(serial_number = transacted_device).first()
     if device.status == 'Provisioned':
-        return redirect(url_for('page_provision_device', status_code = "778500PD", norm = True))
+        return redirect(url_for('main.page_provision_device', status_code = "778500PD", norm = True))
 
     device_provisioning = DeviceProvisioning(transaction_id = transaction_id,
                                              transaction_type = transaction_type,
@@ -48,9 +48,9 @@ def api_transaction_add():
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_provision_device', status_code = "778500", norm = True))
+        return redirect(url_for('main.page_provision_device', status_code = "778500", norm = True))
     
-    return redirect(url_for('page_provisioning', status_code = "778200", norm = True))
+    return redirect(url_for('main.page_provisioning', status_code = "778200", norm = True))
 
 @bp.route('/provisioning/device/return', methods = ['POST'])
 def api_transaction_return():
@@ -81,6 +81,6 @@ def api_transaction_return():
         db.session.commit()
     except Exception as e:
         print(f"ERROR/EX: {e}")
-        return redirect(url_for('page_return_device', transaction_id = prev_transaction_id, status_code = "778500", norm = True))
+        return redirect(url_for('main.page_return_device', transaction_id = prev_transaction_id, status_code = "778500", norm = True))
     
-    return redirect(url_for('page_provisioning', status_code = "778200", norm = True))
+    return redirect(url_for('main.page_provisioning', status_code = "778200", norm = True))
