@@ -41,3 +41,29 @@ def create_user():
     db.session.commit()
 
     return { 'status': 'success', 'message': 'User created successfully.' }
+
+@bp.route('/auth/change_password', methods = ['POST'])
+def kanri_change_password():
+    username = request.form['username']
+    password_old = request.form['password_old']
+    password_new = request.form['password_new']
+
+    user = Users.query.filter_by(username = username).first()
+
+    if user is None:
+        return { 'status': 'error', 'message': 'Username not found.' }
+
+    password_old_md5 = hashlib.md5(password_old.encode()).hexdigest()
+    password_old_salt = hashlib.md5(f"{password_old_md5}{username}".encode()).hexdigest()
+
+    if user.password != password_old_salt:
+        return { 'status': 'error', 'message': 'Old password is incorrect.' }
+    
+    password_new_md5 = hashlib.md5(password_new.encode()).hexdigest()
+    password_new_salt = hashlib.md5(f"{password_new_md5}{username}".encode()).hexdigest()
+    user.password = password_new_salt
+    
+    db.session.commit()
+
+    return { 'status': 'success', 'message': 'Password changed successfully.' }
+    
