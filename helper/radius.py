@@ -84,3 +84,12 @@ def check_user(username):
     conn.close()
 
     return True if radcheck_user and userinfo_user else False
+
+def check_local_entry(username):
+    conn = get_radius_connection()
+    cursor = conn.cursor(buffered = True)
+    cursor.execute('SELECT * FROM radcheck WHERE username = %s', (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return True if result else False

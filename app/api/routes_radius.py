@@ -34,6 +34,13 @@ def api_radius_get_profile():
     except:
         return { 'status': 'error', 'message': 'An error occurred while retrieving the profile.' }
     
+@bp.route('/radius/check_local_entry/<string:username>', methods = ['GET'])
+def api_radius_check_local_entry(username):
+    if radius.check_local_entry(username):
+        return { 'status': 'success', 'message': 'Local entry found.' }
+    else:
+        return { 'status': 'error', 'message': 'Local entry not found.' }
+    
 
 # MANIPULATORS
 
@@ -100,7 +107,6 @@ def api_radius_update_profile():
         
         radius.update_profile(username, firstname, lastname, email, workphone)
         return { 'status': 'success', 'message': 'Profile updated successfully.' }
-        
     except Exception as e:
         print(f"RADDB ERROR: {e}")
         return { 'status': 'error', 'message': 'An error occurred while updating the profile.' }
