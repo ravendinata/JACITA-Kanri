@@ -93,3 +93,21 @@ def check_local_entry(username):
     cursor.close()
     conn.close()
     return True if result else False
+
+def get_simultaneous_use_max(username):
+    conn = get_radius_connection()
+    cursor = conn.cursor(buffered = True)
+    cursor.execute('SELECT value FROM radcheck WHERE username = %s AND attribute = "Simultaneous-Use"', (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return int(result[0]) if result else 0
+
+def check_simultaneous_use_count(username):
+    conn = get_radius_connection()
+    cursor = conn.cursor(buffered = True)
+    cursor.execute('SELECT COUNT(*) FROM radacct WHERE username = %s AND acctstoptime IS NULL', (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return int(result[0]) if result else 99

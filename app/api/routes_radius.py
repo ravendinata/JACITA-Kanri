@@ -34,13 +34,16 @@ def api_radius_get_profile():
     except:
         return { 'status': 'error', 'message': 'An error occurred while retrieving the profile.' }
     
-@bp.route('/radius/check_local_entry/<string:username>', methods = ['GET'])
-def api_radius_check_local_entry(username):
-    if radius.check_local_entry(username):
-        return { 'status': 'success', 'message': 'Local entry found.' }
+@bp.route('/radius/check_simultaneous_use_count/<string:username>', methods = ['GET'])
+def api_radius_check_simultaneous_use(username):
+    if not radius.check_local_entry(username):
+        return { 'status': 'error', 'message': 'Local entry not found. If you are a new staff member, please contact the IT department or your division lead.' }
+    count = radius.check_simultaneous_use_count(username)
+    max = radius.get_simultaneous_use_max(username)
+    if count >= max:
+        return { 'status': 'error', 'message': 'Simultaneous use count exceeded. Please log out on other devices.', 'count': count, 'max': max }
     else:
-        return { 'status': 'error', 'message': 'Local entry not found.' }
-    
+        return { 'status': 'success' }
 
 # MANIPULATORS
 
