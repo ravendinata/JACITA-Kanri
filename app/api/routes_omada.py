@@ -104,7 +104,12 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
             client_data['authenticated'] = authenticated_client is not None
 
             if authenticated_client:
-                client_data['localUser'] = authenticated_client['localUserName'] if 'localUserName' in authenticated_client else None
+                if 'localUserName' in authenticated_client:
+                    client_data['localUser'] = authenticated_client['localUserName']
+                elif 'radiusUsername' in authenticated_client:
+                    client_data['localUser'] = authenticated_client['radiusUsername']
+                else:
+                    client_data['localUser'] = None
             else:
                 client_data['localUser'] = client['dot1xIdentity'] if 'dot1xIdentity' in client else None
 
