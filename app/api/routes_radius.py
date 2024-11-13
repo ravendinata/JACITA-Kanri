@@ -38,10 +38,12 @@ def api_radius_get_profile():
 def api_radius_check_simultaneous_use(username):
     if not radius.check_local_entry(username):
         return { 'status': 'error', 'message': 'Local entry not found. If you are a new staff member, please contact the IT department or your division lead.' }
+    
     count = radius.check_simultaneous_use_count(username)
     max = radius.get_simultaneous_use_max(username)
+    
     if count >= max:
-        return { 'status': 'error', 'message': 'Simultaneous use count exceeded. Please log out on other devices.', 'count': count, 'max': max }
+        return { 'status': 'error', 'message': f'You have used {count} out of {max} of your device quota. Please log out on other device(s).', 'count': count, 'max': max }
     else:
         return { 'status': 'success' }
 
