@@ -106,12 +106,16 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
             if authenticated_client:
                 if 'localUserName' in authenticated_client:
                     client_data['localUser'] = authenticated_client['localUserName']
+                    client_data['authServer'] = "omada.local"
                 elif 'radiusUsername' in authenticated_client:
                     client_data['localUser'] = authenticated_client['radiusUsername']
+                    client_data['authServer'] = "morita"
                 else:
                     client_data['localUser'] = None
+                    client_data['authServer'] = None
             else:
                 client_data['localUser'] = client['dot1xIdentity'] if 'dot1xIdentity' in client else None
+                client_data['authServer'] = "omada.radius" if 'dot1xIdentity' in client else None
 
             data.append(client_data)
     except Exception as e:
