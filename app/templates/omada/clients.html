@@ -16,6 +16,7 @@
                 <th>Device assigned to</th>
                 <th>Connected as</th>
                 <th>Authentication Server</th>
+                <th>Authentication Status</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +41,7 @@
 <script>
 const toast = new bootstrap.Toast(document.getElementById('refreshToast'));
 
-function displayToast(title, message) 
+function displayToast(title, message)
 {
     var time = new Date().toLocaleTimeString();
 
@@ -56,29 +57,55 @@ $(document).ready(function ()
     var tbl = $('#data').DataTable(
     {
         ajax: '/api/omada/clients?format.uptime=true',
-        columns: 
+        stateSave: true,
+        stateDuration: 360 * 24 * 3600,
+        columns:
         [
             { data: 'mac' }, // 0
             { data: 'ip' }, // 1
             { data: 'hostName' }, // 2
             { data: 'connectedTo' }, // 3
             { data: 'connectionPort' }, // 4
-            { 
+            {
                 data: 'uptime', // 5
-                render: function(data, type, row) 
+                render: function(data, type, row)
                 {
                     if (type === 'display' || type === 'filter')
                         return data.formatted;
                     
                     return data.raw;
                 },
-                searchable: false 
-            }, 
+                searchable: false
+            },
             { data: 'assignee' }, // 6
             { data: 'localUser' }, // 7
-            { data: 'authServer' } // 8
+            { data: 'authServer' }, // 8
+            {
+                data: 'authStatus', // 9
+                render: function(data, type, row)
+                {
+                    if (type === 'display' || type === 'filter')
+                    {
+                        switch(data)
+                        {
+                            case 0:
+                                return "Non-authorized"
+                            case 1:
+                                return "Pending"
+                            case 2:
+                                return "Authorized"
+                            case 3:
+                                return "Permanent Bypass"
+                            default:
+                                return "Unknown"
+                        }
+                    }
+
+                    return data
+                }
+            }
         ],
-        columnDefs: 
+        columnDefs:
         [
             {
                 searchPanes: { show: true },
@@ -90,16 +117,16 @@ $(document).ready(function ()
             },
             {
                 visible: false,
-                targets: [8]
+                targets: [8, 9]
             }
         ],
         order: [[6, 'asc']],
         fixedHeader: true,
-        language: 
+        language:
         {
-            searchBuilder: 
+            searchBuilder:
             {
-                button: 
+                button:
                 {
                     0: 'Advanced Search',
                     _: 'Advanced Search (%d)'
@@ -114,7 +141,7 @@ $(document).ready(function ()
         },
         pageLength: 25,
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-        layout: 
+        layout:
         {
             top2Start: 'info',
             top2End: 
@@ -156,7 +183,7 @@ $(document).ready(function ()
                         extend: 'searchBuilder',
                         config: 
                         {
-                            columns: 
+                            columns:
                             {
                                 0: { type: 'string' },
                                 1: { type: 'string' },
@@ -172,7 +199,7 @@ $(document).ready(function ()
                     {
                         text: 'Refresh',
                         attr:  { id: 'btnRefresh' },
-                        action: function (e, dt, node, config) 
+                        action: function (e, dt, node, config)
                         {
                             const btnRefresh = document.getElementById('btnRefresh');
                             btnRefresh.disabled = true;
@@ -181,7 +208,7 @@ $(document).ready(function ()
                             displayToast('Data Refresh', 'Refreshing data from the server...');
                             dt.searchPanes.clearSelections();
                             
-                            dt.ajax.reload(function() 
+                            dt.ajax.reload(function()
                             {
                                 setTimeout(() => dt.searchPanes.rebuildPane(), 2000);
 
@@ -191,12 +218,12 @@ $(document).ready(function ()
                                 displayToast('Data Refresh', 'Data refreshed successfully.');
                             });
                         }
-                    }              
+                    }
                 ]
             },
-            top1: 
+            top1:
             {
-                searchPanes: 
+                searchPanes:
                 {
                     show: true,
                     initCollapsed: true,

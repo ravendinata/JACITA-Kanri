@@ -101,6 +101,7 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
             authenticated_client = next((client for client in authenticated_clients if client['mac'] == mac), None)
 
             client_data['assignee'] = assigned_device.assignee if assigned_device else 'Unassigned'
+            client_data['authStatus'] = client['authStatus']
             client_data['authenticated'] = authenticated_client is not None
 
             if authenticated_client:
