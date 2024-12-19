@@ -598,3 +598,26 @@ class Omada:
 	##
 	def getAuthorizedClients(self, site=None):
 		return self.__geterator( f'/hotspot/sites/{self.__findKey(site)}/clients', { 'currentPage': 1} )
+
+	##
+	## Bypass login a client based on their MAC address
+	##
+	## This is the "Authorize" button on the "Clients List" page
+	##
+	def bypassLogin(self, mac, site=None):
+		return self.__post(f'/sites/{self.__findKey(site)}/cmd/clients/{mac}/auth')
+	
+	##
+	## Get list of application rules set for a filter set
+	##
+	## This is the list of rules in the selected filter within the  "Application Filter" 
+	## tab on the "Application Control" page
+	##
+	def getApplicationFilterRuleList(self, filter_ID, site=None):
+		response = self.__get(f"/sites/{self.__findKey(site)}/applicationControl/application/filters",
+					 	      { "currentPage": 1, "currentPageSize": 100 })
+		
+		filters = response["data"]
+		filter = [ filter for filter in filters if filter["filterId"] == filter_ID ][0]
+		
+		return filter["rules"]

@@ -196,6 +196,15 @@ def api_omada_sites():
 
     return { 'data': data }
 
+@bp.route('/omada/bypass/<string:mac>', methods = ['POST'])
+def api_omada_bypass_login(mac):
+    try:
+        omada.bypassLogin(mac)
+    except Exception as e:
+        return { 'success': True, 'error': str(e) }
+
+    return { 'success': True }
+
 # Daemon to keep Omada API session alive
 def keep_omada_session_alive():
     while True:
