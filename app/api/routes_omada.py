@@ -205,6 +205,25 @@ def api_omada_bypass_login(mac):
 
     return { 'success': True }
 
+@bp.route('/omada/appcontrol/ictlab/<string:operation>/youtube', methods = ['POST'])
+def api_omada_block_ictlab_youtube(operation):
+    if operation == "block":
+        mode = "add"
+    elif operation == "allow":
+        mode = "remove"
+    else:
+        return { 'success': False, 'error': "Invalid operation. Please select either: 'allow' or 'block'."}, 400
+    
+    try:
+        # Check IDs by snopping API data using Developer Tools
+        # 697631348 = ICT Lab Filter ID
+        # 2033620453 = YouTube Application Rule ID
+        omada.toggleRuleInApplicationFilter(697631348, 2033620453, mode)
+    except Exception as e:
+        return { 'success': False, 'error': str(e) }, 500
+
+    return { 'success': True }, 200
+
 # Daemon to keep Omada API session alive
 def keep_omada_session_alive():
     while True:

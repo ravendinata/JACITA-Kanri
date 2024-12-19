@@ -621,3 +621,44 @@ class Omada:
 		filter = [ filter for filter in filters if filter["filterId"] == filter_ID ][0]
 		
 		return filter["rules"]
+	
+	##
+	## Toggle a rule ID from a specified application filter set
+	##
+	## This is equivalent to manually clicking the checkbox for a rule in the 
+	## "Edit Application Filter" page
+	##
+	def toggleRuleInApplicationFilter(self, filter_ID, rule_ID, operation="toggle", site=None):
+		response = self.__get(f"/sites/{self.__findKey(site)}/applicationControl/application/filters",
+					 	      { "currentPage": 1, "currentPageSize": 100 })
+		
+		if operation not in [ "toggle", "add", "remove" ]:
+			raise Exception("Invalid operation")
+		
+		filters = response["data"]
+		filter = [ filter for filter in filters if filter["filterId"] == filter_ID ][0]
+		rules = filter["rules"]
+
+		if operation == "toggle":
+			if rule_ID in rules:
+				rules.remove(rule_ID)
+			else:
+				rules.append(rule_ID)
+		elif operation == "add" and rule_ID not in rules:
+			rules.append(rule_ID)
+		elif operation == "remove" and rule_ID in rules:
+			rules.remove(rule_ID)
+		else:
+			print("Operation skipped")
+			return
+
+		data = {
+			"filter": f"{filter['filter']}",
+			"description": f"{filter['description']}", 
+			"rules": rules, 
+			"selectType": "include",
+			"filterId": filter_ID
+		}
+
+		return self.__post(f"/sites/{self.__findKey(site)}/applicationControl/application/filters/edit", 
+					       json=data)
