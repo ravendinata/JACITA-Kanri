@@ -38,6 +38,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.datatables.net/plug-ins/2.2.2/sorting/absolute.js"></script>
 <script>
 const toast = new bootstrap.Toast(document.getElementById('refreshToast'));
 
@@ -51,6 +52,15 @@ function displayToast(title, message)
 
     toast.show();
 }
+
+var assigneeType = $.fn.dataTable.absoluteOrder([
+    { value: "Unassigned", position: 'bottom' },
+]);
+
+var localUserType = $.fn.dataTable.absoluteOrder([
+    { value: null, position: 'bottom' },
+    { value: '', position: 'bottom' }
+]);
 
 $(document).ready(function () 
 {
@@ -77,8 +87,14 @@ $(document).ready(function ()
                 },
                 searchable: false
             },
-            { data: 'assignee' }, // 6
-            { data: 'localUser' }, // 7
+            { 
+                data: 'assignee', // 6
+                type: assigneeType
+            },            
+            {
+                 data: 'localUser', // 7
+                 type: localUserType
+            },
             { data: 'authServer' }, // 8
             {
                 data: 'authStatus', // 9
