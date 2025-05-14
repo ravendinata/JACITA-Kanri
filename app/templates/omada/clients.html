@@ -250,6 +250,27 @@ $(document).ready(function ()
             bottomEnd: 'paging',
         }
     });
+
+    // Periodic updates on the table querying the server every 5 minutes
+    setInterval(function()
+    {
+        const btnRefresh = document.getElementById('btnRefresh');
+        btnRefresh.disabled = true;
+        btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Refreshing...';
+
+        displayToast('Data Refresh', 'Refreshing data from the server...');
+        tbl.searchPanes.clearSelections();
+        
+        tbl.ajax.reload(function()
+        {
+            setTimeout(() => tbl.searchPanes.rebuildPane(), 2000);
+
+            btnRefresh.disabled = false;
+            btnRefresh.innerHTML = 'Refresh';
+
+            displayToast('Data Refresh', 'Data refreshed successfully.');
+        });
+    }, 60000);
 });
 </script>
 {% endblock %}
