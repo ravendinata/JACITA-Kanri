@@ -106,11 +106,14 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
 
             if authenticated_client:
                 if 'localUserName' in authenticated_client:
-                    client_data['localUser'] = authenticated_client['localUserName']
+                    client_data['localUser'] = str(authenticated_client['localUserName']).lower()
                     client_data['authServer'] = "omada.local"
                 elif 'radiusUsername' in authenticated_client:
-                    client_data['localUser'] = authenticated_client['radiusUsername']
+                    client_data['localUser'] = str(authenticated_client['radiusUsername']).lower()
                     client_data['authServer'] = "morita"
+                elif 'voucherCode' in authenticated_client and authenticated_client['voucherCode'] is not None:
+                    client_data['localUser'] = f"{authenticated_client['voucherCode']} (Guest Voucher)"
+                    client_data['authServer'] = "omada.voucher"
                 else:
                     client_data['localUser'] = None
                     client_data['authServer'] = None
