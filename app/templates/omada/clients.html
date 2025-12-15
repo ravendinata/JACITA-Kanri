@@ -259,7 +259,6 @@ $(document).ready(function ()
         btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Refreshing...';
 
         displayToast('Data Refresh', 'Refreshing data from the server...');
-        tbl.searchPanes.clearSelections();
         
         tbl.ajax.reload(function()
         {
@@ -269,6 +268,10 @@ $(document).ready(function ()
             btnRefresh.innerHTML = 'Refresh';
 
             displayToast('Data Refresh', 'Data refreshed successfully.');
+
+            // Keep current scroll position
+            var scrollPos = $(window).scrollTop();
+            $(window).scrollTop(scrollPos);
         });
     }, 60000);
 });
