@@ -159,6 +159,7 @@ $(document).ready(function ()
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         layout:
         {
+            top3End: 'search',
             top2Start: 'info',
             top2End: 
             {
@@ -226,13 +227,14 @@ $(document).ready(function ()
                             
                             dt.ajax.reload(function()
                             {
-                                setTimeout(() => dt.searchPanes.rebuildPane(), 2000);
+                                // Rebuild search panes after reload but without losing current selections (true parameter)
+                                setTimeout(() => dt.searchPanes.rebuildPane(undefined, true), 2000);
 
                                 btnRefresh.disabled = false;
                                 btnRefresh.innerHTML = 'Refresh';
 
                                 displayToast('Data Refresh', 'Data refreshed successfully.');
-                            });
+                            }, false);
                         }
                     }
                 ]
@@ -246,6 +248,7 @@ $(document).ready(function ()
                     cascadePanes: true
                 }
             },
+            topEnd: 'paging',
             bottomStart: null,
             bottomEnd: 'paging',
         }
@@ -262,7 +265,8 @@ $(document).ready(function ()
         
         tbl.ajax.reload(function()
         {
-            setTimeout(() => tbl.searchPanes.rebuildPane(), 2000);
+            // Rebuild search panes after reload but without losing current selections (true parameter)
+            setTimeout(() => tbl.searchPanes.rebuildPane(undefined, true), 2000);
 
             btnRefresh.disabled = false;
             btnRefresh.innerHTML = 'Refresh';
@@ -272,7 +276,7 @@ $(document).ready(function ()
             // Keep current scroll position
             var scrollPos = $(window).scrollTop();
             $(window).scrollTop(scrollPos);
-        });
+        }, false);
     }, 60000);
 });
 </script>
