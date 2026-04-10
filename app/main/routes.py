@@ -9,6 +9,10 @@ from app.main import bp
 from app.extensions import db
 from app.models.device import Devices, AssignedDevices, DeviceProvisioning
 from helper.status import get_status
+from helper.omada_api import Omada
+
+omada = Omada("omada.cfg")
+omada.login()
 
 @bp.route('/')
 def index():
@@ -199,7 +203,10 @@ def page_view_provisioned_device_history():
 
 @bp.route('/network')
 def page_network():
-    return render_template('network/dashboard.html', title = 'Network Dashboard')
+    return render_template('network/dashboard.html', 
+                           title = 'Network Dashboard', 
+                           count_omada_clients = len(list(omada.getSiteClients())), 
+                           count_omada_devices = len(list(omada.getSiteDevices())))
 
 # Omada Subroutes
 @bp.route('/network/omada/clients')
