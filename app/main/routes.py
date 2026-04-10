@@ -84,7 +84,7 @@ def page_device(serial_number):
                                assigned_client = assigned_client)
 
     return render_template('device.html', 
-                           title = 'Device', 
+                           title = 'Device',
                            device = device.to_dict(), 
                            wmac_info = wireless_mac_lookup,
                            emac_info = ethernet_mac_lookup,
@@ -166,7 +166,7 @@ def page_return_device(transaction_id):
                                message = status['message'])
     
     return render_template('return_device.html', 
-                           title = 'Return Device', 
+                           title = 'Return Device',
                            transaction_id = helper.generate_txn_id('DEV'), 
                            original_transaction = original_transaction.to_dict())
 
@@ -209,6 +209,10 @@ def page_omada_dashboard():
 @bp.route('/network/omada/clients')
 def page_omada_clients():
     return render_template('omada/clients.html', title = 'Clients List')
+
+@bp.route('/network/omada/bypass')
+def page_omada_bypass():
+    return render_template('omada/bypass.html', title = 'Bypass Management')
 
 # RADIUS Subroutes
 @bp.route('/network/radius')
