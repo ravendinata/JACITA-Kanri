@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<span class="float-end" id="headerControls"><a class="btn btn-primary" href="/provision_device"><i class="fa-solid fa-stamp"></i> Checkout a Device</a></span>
-<h2>{{ title }}</h2>
+<div class="d-flex justify-content-between align-items-center mb-4" style="margin-top: 1.5rem;" id="headerControls">
+    <h2>{{ title }}</h2>
+    <a class="btn btn-primary" href="/provision_device"><i class="fa-solid fa-stamp"></i> Checkout a Device</a>
+</div>
 <hr>
 <div class="container-fluid" style="padding-bottom: 48px;">
     <table id="data" class="table table-striped" style="width: 100%;">

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-top: 1.5rem;">
+    <h2>Bypass Login</h2>
+</div>
+<hr>
+<div class="container-fluid" style="padding-bottom: 48px; padding-top: 24px; max-width: 800px;">
+    <form id="bypassForm">
+        <div class="mb-3">
+            <label for="macAddress" class="form-label">Target Client MAC Address</label>
+            <input type="text" class="form-control" id="macAddress" name="macAddress" placeholder="00:11:22:33:44:55" required pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$">
+            <div class="form-text">Enter the MAC address of the device you want to bypass login for.</div>
+        </div>
+        <button type="submit" class="btn btn-primary float-end"><i class="fa-solid fa-user-shield"></i> Bypass Login</button>
+    </form>
+    <div id="resultMessage" class="mt-3"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() 
+{
+    $('#bypassForm').on('submit', function(event) 
+    {
+        event.preventDefault(); // Prevent the default form submission
+
+        var macAddress = $('#macAddress').val();
+        var resultMessage = $('#resultMessage');
+
+        // Clear previous messages
+        resultMessage.removeClass('alert alert-success alert-danger').text('');
+
+        $.ajax({
+            url: `/api/omada/bypass/${macAddress}`,
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(response)            {
+                if (response.success)
+                    resultMessage.addClass('alert alert-success').text('Bypass login successful for MAC address: ' + macAddress);
+                else
+                    resultMessage.addClass('alert alert-danger').text('Error: ' + response.error);
+            },
+            error: function(xhr, status, error) 
+            {
+                resultMessage.addClass('alert alert-danger').text('An error occurred: ' + error);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

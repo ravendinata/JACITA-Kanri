@@ -7,8 +7,10 @@
 </div>
 {% endif %}
 <div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
-    <span><a href="#" onclick="history.back()" class="btn btn-secondary float-end"><i class="fa-solid fa-caret-left"></i> Back</a></span>
-    <h2>{{ title }}</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4" style="margin-top: 1.5rem;">
+        <h2>{{ title }}</h2>
+        <a href="#" onclick="history.back()" class="btn btn-secondary"><i class="fa-solid fa-caret-left"></i> Back</a>
+    </div>
     <hr>
     <form class="needs-validation" id="deviceProvisioningForm" method="POST" novalidate>
         <div class="row">

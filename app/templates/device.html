@@ -24,24 +24,26 @@
 </div>
 {% endif %}
 <div class="container-fluid" style="width: 90%; padding-bottom: 48px;">
-    <span>
-        <div class="btn-group float-end me-2">
-            <button type="button" class="btn btn-primary float-end" onclick="window.location.href = `/device/{{ device.serial_number }}/edit`"><i class="fa-regular fa-pen-to-square"></i> Edit Device Information</button>
-            <button type="button" id="moreButtonGroup" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">More</span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="moreButtonGroup">
-                <li><a class="dropdown-item" href="/provisioning/view/history?deviceID={{ device.serial_number }}"><i class="fa-solid fa-timeline"></i> View Provisioning History</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</h6></li>
-                <li><a class="dropdown-item link-danger" href="#" onclick="show_delete_modal()"><i class="fa-regular fa-trash-can"></i> Delete Device</a></li>
-            </ul>
-        </div>
-        <button type="button" class="btn btn-secondary float-end me-2" onclick="history.back()"><i class="fa-solid fa-caret-left"></i> Back</button>
-    </span>
-    <div id="table">
+    <div class="d-flex justify-content-between align-items-center mb-4" style="margin-top: 1.5rem;">
         <h3>Device Information</h3>
-        <hr>
+        <div>
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-primary" onclick="window.location.href = `/device/{{ device.serial_number }}/edit`"><i class="fa-regular fa-pen-to-square"></i> Edit Device Information</button>
+                <button type="button" id="moreButtonGroup" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">More</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="moreButtonGroup">
+                    <li><a class="dropdown-item" href="/provisioning/view/history?deviceID={{ device.serial_number }}"><i class="fa-solid fa-timeline"></i> View Provisioning History</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><h6 class="dropdown-header"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</h6></li>
+                    <li><a class="dropdown-item link-danger" href="#" onclick="show_delete_modal()"><i class="fa-regular fa-trash-can"></i> Delete Device</a></li>
+                </ul>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="history.back()"><i class="fa-solid fa-caret-left"></i> Back</button>
+        </div>
+    </div>
+    <hr>
+    <div id="table">
         <form id="deviceForm" method="POST">
             <input type="hidden" name="serial_number_original" value="{{ device.serial_number }}">
             <div class="row">

@@ -1,18 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>{{ title }}</h2>
+<div style="margin-top: 1.5rem;">
+    <h2>{{ title }}</h2>
+</div>
 <hr>
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card h-100">
+            <div class="card-header">
+                <i class="fa-solid fa-table-columns"></i> Omada Software-Defined Network Dashboard
+            </div>
             <div class="card-body">
-                <h1 class="display-5"><i class="fa-solid fa-table-columns"></i></h1>
-                <h5 class="card-title">Omada Dashboard</h5>
-                <p class="card-text">Access API data and controls on the configured local Omada controller.</p>
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">Network Clients</h5>
+                        <p class="card-text">View clients connected to the network with integrated data.</p>
+                    </div>
+                    <div class="col-5 align-self-center">
+                        <a href="{{ url_for('main.page_omada_clients') }}" class="btn btn-outline-primary" style="width: 100%;"><i class="fa-solid fa-binoculars"></i> View N/W Clients</a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mt-3">
+                    <div class="col">
+                        <h5 class="card-title">Bypass Login</h5>
+                        <p class="card-text">Authenticate a MAC address to skip captive portal login.</p>
+                    </div>
+                    <div class="col-5 align-self-center">
+                        <a href="{{ url_for('main.page_omada_bypass') }}" class="btn btn-outline-primary" style="width: 100%;"><i class="fa-solid fa-unlock"></i> Bypass</a>
+                    </div>
+                </div>
             </div>
             <div class="card-footer">
-                <a href="{{ url_for('main.page_omada_dashboard') }}" class="btn btn-primary float-end">Omada Dashboard</a>
+                <b>Stats &RightArrow;</b>
+                <small class="text-muted">Clients: {{ count_omada_clients }} | Devices: {{ count_omada_devices }}</small>
             </div>
         </div>
     </div>

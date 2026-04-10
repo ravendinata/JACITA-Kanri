@@ -1,24 +1,37 @@
 {% extends 'auth/base.html' %}
 
 {% block content %}
-<div class="login-page">
-    <h1>Login</h1>
-    <form method="POST" action="/api/auth/login">
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <div class="input-group">
-                <input type="password" class="form-control border-end-0" id="password" name="password" required>
-                <span class="input-group-text bg-transparent" id="passwordToggle">
-                    <i class="fa-solid fa-eye-slash" style="cursor: pointer;"></i>
-                </span>
+<div class="card">
+    <div class="card-body" style="padding: 2.5rem;">
+        <h1 class="display-6 text-center mb-4">
+            <i class="fa-solid fa-crow"></i>
+            JACITA Kanri
+        </h1>
+        <h2 class="text-center mb-4">Login</h2>
+        <form method="POST" action="/api/auth/login">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary float-end" id="btnSubmit">Login</button>
-    </form>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control border-end-0" id="password" name="password" required>
+                    <span class="input-group-text bg-transparent" id="passwordToggle">
+                        <i class="fa-solid fa-eye-slash" style="cursor: pointer;"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
+                <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSubmit">Login</button>
+        </form>
+    </div>
+    <div class="card-footer text-center">
+        <small class="text-muted d-block">&copy; JAC IT Administration</small>
+    </div>
 </div>
 {% endblock %}
 
@@ -65,7 +78,14 @@ document.querySelector('form').addEventListener('submit', async (event) =>
     if (data.status === "success") 
     {
         // Store the username in cookies
-        setCookie('kanri_username', username, 1);
+        if (formData.get('remember_me')) 
+        {
+            setCookie('kanri_username', username, 30);
+        } 
+        else 
+        {
+            setCookie('kanri_username', username, 1);
+        }
 
         // Redirect to the home page
         window.location.href = "{{ url_for('main.index') }}";
