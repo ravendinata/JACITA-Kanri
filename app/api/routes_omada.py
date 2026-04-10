@@ -94,8 +94,8 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
                 }
 
             # Filter the pre-fetched assigned devices to find the device with the matching MAC address
-            assigned_device = next((device for device in assigned_devices if device.device_wireless_mac.lower() == mac or device.device_ethernet_mac.lower() == mac), 
-                                None)
+            assigned_device = next((device for device in assigned_devices if device.device_wireless_mac.lower() == mac\
+                                    or device.device_ethernet_mac.lower() == mac), None)
             
             # Check if the client is an authenticated client
             authenticated_client = next((client for client in authenticated_clients if client['mac'] == mac), None)
@@ -202,9 +202,14 @@ def api_omada_sites():
 @bp.route('/omada/bypass/<string:mac>', methods = ['POST'])
 def api_omada_bypass_login(mac):
     try:
-        omada.bypassLogin(mac)
+        format_mac = str(mac.replace(':', '-')).upper()
+        print(f"Bypassing login for MAC: {format_mac}")
+        if len(format_mac) != 17 or format_mac.count('-') != 5:
+            return { 'success': False, 'error': "Invalid MAC address format. Please use format: XX:XX:XX:XX:XX:XX" }, 400
+        else:
+            omada.bypassLogin(format_mac)
     except Exception as e:
-        return { 'success': True, 'error': str(e) }
+        return { 'success': False, 'error': str(e) }
 
     return { 'success': True }
 
@@ -230,15 +235,17 @@ def api_omada_block_ictlab_youtube(operation):
 # Daemon to keep Omada API session alive
 def keep_omada_session_alive():
     while True:
-        omada.login()
-        print('Omada API session refreshed')
-
-        login_status = omada.getLoginStatus()
-        print(login_status)
+        try:
+            print('Refreshing Omada API session...')
+            omada.login()
+            login_status = omada.getLoginStatus()
+            print(f"Omada API session refreshed. Login status: {login_status}")
+        except Exception as e:
+            print(f'Error refreshing Omada API session: {e}')
 
         time.sleep(1800)
 
 # Start the daemon
 import threading
-thread = threading.Thread(target = keep_omada_session_alive)
+thread = threading.Thread(target = keep_omada_session_alive, daemon = True)
 thread.start()
