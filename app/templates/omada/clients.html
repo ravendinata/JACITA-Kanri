@@ -94,8 +94,30 @@ $(document).ready(function ()
                 type: assigneeType
             },            
             {
-                 data: 'localUser', // 7
-                 type: localUserType
+                data: 'localUser', // 7
+                type: localUserType,
+                render: function(data, type, row)
+                {
+                    
+                    // Check if localUser and asignee are the same, if not, color the localUser in red to indicate a mismatch
+                    // Also display a tooltip on hover to indicate the mismatch. Plus an icon to indicate mismatch should be a warning triangle.
+                    if (type === 'display' || type === 'filter')
+                    {
+                        if (data !== null && data !== '' && row.assignee !== null && row.assignee !== '' && row.assignee !== 'Unassigned')
+                        {
+                            if (data.toLowerCase() === row.assignee.toLowerCase())
+                                return `<span class="text-success" data-bs-toggle="tooltip" title="Matches assigned device: ${row.assignee}"><small><i class="fa-solid fa-user-check"></i></small> ${data}</span>`;
+                            else 
+                                return `<span class="text-danger" data-bs-toggle="tooltip" title="Mismatch with assigned device: ${row.assignee}"><small><i class="fa-solid fa-user-xmark"></i></small> ${data}</span>`;
+                        }
+                        else
+                        {
+                            return data;
+                        }
+                    }
+
+                    return data;
+                }
             },
             { data: 'authServer' }, // 8
             {
