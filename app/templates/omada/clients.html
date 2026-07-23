@@ -6,7 +6,7 @@
 </div>
 <hr>
 <div class="container-fluid" style="padding-bottom: 48px;">
-    <table id="data" class="table table-striped" style="width: 100%;">
+    <table id="data" class="table table-striped" style="width: 100%; font-size: 0.9rem;">
         <thead>
             <tr>
                 <th>MAC Address</th>
@@ -103,12 +103,20 @@ $(document).ready(function ()
                     // Also display a tooltip on hover to indicate the mismatch. Plus an icon to indicate mismatch should be a warning triangle.
                     if (type === 'display' || type === 'filter')
                     {
-                        if (data !== null && data !== '' && row.assignee !== null && row.assignee !== '' && row.assignee !== 'Unassigned')
+                        if (data !== null && data !== '' && row.assignee !== null && row.assignee !== '')
                         {
-                            if (data.toLowerCase() === row.assignee.toLowerCase())
-                                return `<span class="text-success" data-bs-toggle="tooltip" title="Matches assigned device: ${row.assignee}"><small><i class="fa-solid fa-user-check"></i></small> ${data}</span>`;
-                            else 
-                                return `<span class="text-danger" data-bs-toggle="tooltip" title="Mismatch with assigned device: ${row.assignee}"><small><i class="fa-solid fa-user-xmark"></i></small> ${data}</span>`;
+                            if (row.assignee === 'Unassigned')
+                            {
+                                // BYOD or unassigned device, so we don't care about the mismatch but mark light blue to indicate that the device is unassigned
+                                return `<span class="text-primary" data-bs-toggle="tooltip" title="BYOD or unassigned device"><small><i class="fa-solid fa-user-tag"></i></small> ${data}</span>`;
+                            }
+                            else
+                            {
+                                if (data.toLowerCase() === row.assignee.toLowerCase())
+                                    return `<span class="text-success" data-bs-toggle="tooltip" title="Matches assigned device"><small><i class="fa-solid fa-user-check"></i></small> ${data}</span>`;
+                                else 
+                                    return `<span class="text-danger" data-bs-toggle="tooltip" title="Mismatch with assigned device: ${row.assignee}"><small><i class="fa-solid fa-user-xmark"></i></small> ${data}</span>`;
+                            } 
                         }
                         else
                         {
