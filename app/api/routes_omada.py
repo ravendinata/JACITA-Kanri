@@ -106,10 +106,10 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
 
             if authenticated_client:
                 if 'localUserName' in authenticated_client:
-                    client_data['localUser'] = str(authenticated_client['localUserName']).lower()
+                    client_data['localUser'] = str(authenticated_client['localUserName'])
                     client_data['authServer'] = "omada.local"
                 elif 'radiusUsername' in authenticated_client:
-                    client_data['localUser'] = str(authenticated_client['radiusUsername']).lower()
+                    client_data['localUser'] = str(authenticated_client['radiusUsername'])
                     client_data['authServer'] = "morita"
                 elif 'voucherCode' in authenticated_client and authenticated_client['voucherCode'] is not None:
                     client_data['localUser'] = f"{authenticated_client['voucherCode']} (Guest Voucher)"
@@ -120,6 +120,9 @@ def get_clients(columns, filter_ssid = None, format_uptime = False):
             else:
                 client_data['localUser'] = client['dot1xIdentity'] if 'dot1xIdentity' in client else None
                 client_data['authServer'] = "omada.radius" if 'dot1xIdentity' in client else None
+
+            if client_data['localUser'] is not None:
+                client_data['localUser'] = str(client_data['localUser']).lower()
 
             data.append(client_data)
     except Exception as e:
